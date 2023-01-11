@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+        <variable
+            name="m"
+            type="com.lxr.video_player.entity.VideoFolder" />
+        <import type="com.blankj.utilcode.util.ConvertUtils"/>
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/item"
+        android:layout_width="match_parent"
+        android:layout_height="80dp"
+        android:paddingHorizontal="10dp"
+        android:orientation="horizontal">
+
+        <!-- 定义一个用于显示图像的 ImageView -->
+        <com.lihang.ShadowLayout
+            android:id="@+id/iv_container"
+            android:layout_width="110dp"
+            android:layout_height="62dp"
+            android:layout_gravity="center_horizontal"
+            android:baselineAlignBottom="true"
+            app:hl_cornerRadius="@dimen/common_corners"
+            app:hl_layoutBackground="@android:color/transparent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <ImageView
+                android:id="@+id/iv"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:src="@mipmap/iv_video"/>
+
+        </com.lihang.ShadowLayout>
+
+
+        <TextView
+            android:id="@+id/tv_name"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:gravity="start"
+            app:layout_constrainedWidth="true"
+            android:layout_marginTop="8dp"
+            android:ellipsize="end"
+            android:maxLines="1"
+            android:text='@{m.name}'
+            android:textColor="@color/common_white"
+            android:textSize="16sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/iv_container"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:text="默认文件夹" />
+
+
+        <TextView
+            android:id="@+id/textView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="8dp"
+            android:text='@{m.videoList.size() + " 视频"}'
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="@+id/tv_name"
+            android:textColor="@color/common_white"
+            android:textSize="12sp"
+            tools:text="10 视频" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

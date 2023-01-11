@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="@color/bg_page"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <com.hjq.bar.TitleBar
+        android:id="@+id/title_bar"
+        android:layout_width="match_parent"
+        android:layout_height="44dp"
+        android:background="@color/colorPrimary"
+        app:title="首页"
+        app:leftIcon="@null"
+        app:lineVisible="false"
+        app:titleColor="@color/common_white" />
+
+    <com.lihang.ShadowLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="14dp"
+        app:hl_cornerRadius="@dimen/common_corners"
+        app:hl_layoutBackground="@color/colorPrimary"
+        >
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rv"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            tools:listitem="@layout/item_folder"
+            />
+    </com.lihang.ShadowLayout>
+
+
+</LinearLayout>
