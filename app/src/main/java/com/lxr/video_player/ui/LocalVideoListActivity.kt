@@ -39,7 +39,6 @@ class LocalVideoListActivity : BaseActivity<ActivityVideoListBinding>() {
     override fun initView() {
         binding.titleBar.leftTitle = intent.getStringExtra("title")
         val videoFolder= GsonUtils.fromJson(intent.getStringExtra("list"), VideoFolder::class.java)
-        LogUtils.d(videoFolder.videoList)
         binding.rv.run {
             linear().divider(R.drawable.divider).setup {
                 setAnimation(AnimationType.SLIDE_BOTTOM)

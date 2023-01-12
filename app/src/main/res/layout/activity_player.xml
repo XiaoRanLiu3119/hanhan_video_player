@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     tools:context=".ui.PlayerActivity">
 
-    <com.shuyu.gsyvideoplayer.video.StandardGSYVideoPlayer
+    <com.lxr.video_player.widget.LongPressPlayer
         android:id="@+id/video_player"
         android:layout_width="match_parent"
         android:layout_height="match_parent"

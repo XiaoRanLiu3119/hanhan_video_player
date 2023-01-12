@@ -24,6 +24,7 @@
             android:layout_height="62dp"
             android:layout_gravity="center_horizontal"
             android:baselineAlignBottom="true"
+            app:clickable="false"
             app:hl_cornerRadius="@dimen/common_corners"
             app:hl_layoutBackground="@android:color/transparent"
             app:layout_constraintBottom_toBottomOf="parent"

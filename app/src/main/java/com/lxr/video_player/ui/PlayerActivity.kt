@@ -1,21 +1,20 @@
 package com.lxr.video_player.ui
 
-import android.content.pm.ActivityInfo
 import android.content.res.Configuration
 import android.util.DisplayMetrics
 import android.view.View
-import android.widget.ImageView
-import com.blankj.utilcode.util.LogUtils
-import com.blankj.utilcode.util.SPUtils
 import com.dyne.myktdemo.base.BaseActivity
-import com.lxr.video_player.R
+import com.lxr.video_player.action.OnLongPressUpListener
 import com.lxr.video_player.databinding.ActivityPlayerBinding
 import com.lxr.video_player.utils.SpUtil
 import com.shuyu.gsyvideoplayer.GSYVideoManager
+import com.shuyu.gsyvideoplayer.listener.GSYStateUiListener
 import com.shuyu.gsyvideoplayer.utils.OrientationUtils
+import com.shuyu.gsyvideoplayer.video.base.GSYVideoView
+import me.jessyan.autosize.internal.CancelAdapt
 
 
-open class PlayerActivity : BaseActivity<ActivityPlayerBinding>() {
+open class PlayerActivity : BaseActivity<ActivityPlayerBinding>(), CancelAdapt {
     /**
      * 当前播放影片的id,仅用于存取播放进度
      */
@@ -53,12 +52,7 @@ open class PlayerActivity : BaseActivity<ActivityPlayerBinding>() {
 //        videoPlayer.setUp("file://"+ path, false, title);
         //外部辅助的旋转，帮助全屏
         binding.videoPlayer.setUp("file://$path", false, title)
-
-        //增加封面
-        val imageView = ImageView(this)
-        imageView.scaleType = ImageView.ScaleType.CENTER_CROP
-        imageView.setImageResource(R.mipmap.xxx1)
-        binding.videoPlayer.thumbImageView = imageView
+        binding.videoPlayer.gsyStateUiListener
         //增加title
         binding.videoPlayer.titleTextView.visibility = View.VISIBLE
         //设置返回键
@@ -73,9 +67,35 @@ open class PlayerActivity : BaseActivity<ActivityPlayerBinding>() {
             }
         //是否可以滑动调整
         binding.videoPlayer.setIsTouchWiget(true)
+        binding.videoPlayer.seekRatio = 50F
         //设置返回按键功能
         binding.videoPlayer.backButton.setOnClickListener { onBackPressed() }
-        if (id != null) {
+        binding.videoPlayer.isReleaseWhenLossAudio = false
+        binding.videoPlayer.gsyStateUiListener = object : GSYStateUiListener {
+            override fun onStateChanged(state: Int) {
+                when (state) {
+                    GSYVideoView.CURRENT_STATE_PAUSE, GSYVideoView.CURRENT_STATE_ERROR -> {
+                        //直接home退出/暂停/返回,存储当前影片的播放进度
+                        id?.let { SpUtil.put(it, binding.videoPlayer.currentPositionWhenPlaying) }
+                    }
+                    GSYVideoView.CURRENT_STATE_AUTO_COMPLETE -> id?.let {//自动播放完成完成清空该影片缓存的进度
+                        SpUtil.removeKey(it)
+                    }
+                }
+            }
+        }
+        binding.videoPlayer.setOnLongPressListener(object : OnLongPressUpListener {//长按监听
+            override fun onLongPressIsStart(start: Boolean) {
+                if (start){
+                    showLoading()
+                    binding.videoPlayer.setSpeedPlaying(2F, false)
+                }else{
+                    dismissLoading()
+                    binding.videoPlayer.setSpeedPlaying(1F, false)
+                }
+            }
+        })
+        if (id != null) {//设置进度再播放
             val playPosition = SpUtil.getLong(id!!)
             if (playPosition != null) {//设置上次播放的位置
                 binding.videoPlayer.seekOnStart = playPosition
@@ -84,12 +104,8 @@ open class PlayerActivity : BaseActivity<ActivityPlayerBinding>() {
         binding.videoPlayer.startPlayLogic()
     }
 
-
     override fun onPause() {
         super.onPause()
-        //存储当前影片的播放进度
-        id?.let { SpUtil.put(it, binding.videoPlayer.currentPositionWhenPlaying) }
-        LogUtils.d("当前id::$id + 当前播放位置::$binding.videoPlayer.currentPositionWhenPlaying")
         binding.videoPlayer.onVideoPause()
     }
 
