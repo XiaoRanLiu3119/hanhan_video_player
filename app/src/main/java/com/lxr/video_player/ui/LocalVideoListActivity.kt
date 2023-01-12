@@ -35,7 +35,6 @@ import com.lxr.video_player.widget.SpaceItemDecoration
  */
 class LocalVideoListActivity : BaseActivity<ActivityVideoListBinding>() {
 
-
     override fun initView() {
         binding.titleBar.leftTitle = intent.getStringExtra("title")
         val videoFolder= GsonUtils.fromJson(intent.getStringExtra("list"), VideoFolder::class.java)

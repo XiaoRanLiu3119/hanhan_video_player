@@ -74,7 +74,7 @@ abstract class BaseActivity<T : ViewBinding> : AppCompatActivity(), OnTitleBarLi
 
     override fun onLeftClick(titleBar: TitleBar?) {
         super.onLeftClick(titleBar)
-        finish()
+        onBackPressed()
     }
 
     override fun onRightClick(titleBar: TitleBar?) {

@@ -87,10 +87,9 @@ open class PlayerActivity : BaseActivity<ActivityPlayerBinding>(), CancelAdapt {
         binding.videoPlayer.setOnLongPressListener(object : OnLongPressUpListener {//长按监听
             override fun onLongPressIsStart(start: Boolean) {
                 if (start){
-                    showLoading()
+                    //todo 添加倍速播放dialog
                     binding.videoPlayer.setSpeedPlaying(2F, false)
                 }else{
-                    dismissLoading()
                     binding.videoPlayer.setSpeedPlaying(1F, false)
                 }
             }
