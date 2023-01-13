@@ -14,10 +14,13 @@ import com.hjq.bar.OnTitleBarListener
 import com.hjq.bar.TitleBar
 import com.lxj.xpopup.XPopup
 import com.lxj.xpopup.impl.LoadingPopupView
+import org.greenrobot.eventbus.EventBus
+import org.greenrobot.eventbus.Subscribe
+import org.greenrobot.eventbus.ThreadMode
 import java.lang.reflect.ParameterizedType
 
 abstract class BaseActivity<T : ViewBinding> : AppCompatActivity(), OnTitleBarListener {
-
+    val TAG = javaClass.name
     protected lateinit var binding: T
 
     protected var loadingPopup: LoadingPopupView? = null
@@ -30,11 +33,20 @@ abstract class BaseActivity<T : ViewBinding> : AppCompatActivity(), OnTitleBarLi
         val method = aClass.getDeclaredMethod("inflate", LayoutInflater::class.java)
         binding = method.invoke(null, layoutInflater) as T
         setContentView(binding.root)
-
+        EventBus.getDefault().register(this)
 
         initTitleStatusBar()
         initView()
         initListener()
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        EventBus.getDefault().unregister(this)
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    open fun onEvent(simpleMessage: String?) {
     }
 
 

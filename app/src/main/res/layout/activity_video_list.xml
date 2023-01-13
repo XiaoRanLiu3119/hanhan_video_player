@@ -14,7 +14,12 @@
         android:background="@color/colorPrimary"
         app:lineVisible="false"
         app:leftTitleColor="@color/common_white"
-        app:titleColor="@color/common_white" />
+        app:titleColor="@color/common_white"
+        app:rightIcon="@mipmap/ic_multi_choice"
+        app:rightIconWidth="18dp"
+        app:rightIconHeight="18dp"
+        app:leftIconTint="@color/common_light_gray_color"
+        app:rightIconTint="@color/common_light_gray_color"/>
 
     <com.lihang.ShadowLayout
         android:layout_width="match_parent"

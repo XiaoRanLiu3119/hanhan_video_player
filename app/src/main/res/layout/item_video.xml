@@ -65,7 +65,6 @@
             android:layout_height="wrap_content"
             android:layout_marginLeft="8dp"
             android:layout_marginBottom="6dp"
-            android:text="@{m.duration}"
             android:textColor="@color/common_white"
             android:textSize="12sp"
             app:layout_constraintBottom_toBottomOf="@+id/iv_container"
@@ -96,5 +95,15 @@
             app:layout_constraintLeft_toRightOf="@+id/textView"
             app:layout_constraintBottom_toBottomOf="@+id/textView"
             app:layout_constraintTop_toTopOf="@+id/textView" />
+
+        <ProgressBar
+            android:id="@+id/progressBar"
+            style="?android:attr/progressBarStyleHorizontal"
+            android:layout_width="0dp"
+            android:progressDrawable="@drawable/bg_progressbar"
+            android:layout_height="2dp"
+            app:layout_constraintLeft_toLeftOf="@+id/iv_container"
+            app:layout_constraintBottom_toBottomOf="@+id/iv_container"
+            app:layout_constraintRight_toRightOf="@+id/iv_container"/>
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

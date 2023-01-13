@@ -4,16 +4,19 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.view.Window
 import androidx.appcompat.widget.Toolbar
 import androidx.fragment.app.Fragment
 import androidx.viewbinding.ViewBinding
+import com.blankj.utilcode.util.LogUtils
 import com.gyf.immersionbar.ktx.fitsTitleBar
 import com.gyf.immersionbar.ktx.immersionBar
 import com.hjq.bar.OnTitleBarListener
 import com.hjq.bar.TitleBar
 import com.lxj.xpopup.XPopup
 import com.lxj.xpopup.impl.LoadingPopupView
+import org.greenrobot.eventbus.EventBus
+import org.greenrobot.eventbus.Subscribe
+import org.greenrobot.eventbus.ThreadMode
 import java.lang.reflect.ParameterizedType
 
 /**
@@ -23,7 +26,7 @@ import java.lang.reflect.ParameterizedType
  * @Description :
  */
 abstract class BaseFragment<T : ViewBinding> : Fragment(),OnTitleBarListener{
-
+    val TAG = javaClass.name
     protected lateinit var binding: T
     protected var loadingPopup: LoadingPopupView? = null
 
@@ -45,6 +48,20 @@ abstract class BaseFragment<T : ViewBinding> : Fragment(),OnTitleBarListener{
         initTitleStatusBar()
         initData()
         initListener()
+    }
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        EventBus.getDefault().register(this)
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        EventBus.getDefault().unregister(this)
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    open fun onEvent(simpleMessage: String?) {
     }
 
     /**

@@ -29,6 +29,5 @@ class MyApp:Application() {
         //不想让 App 内的字体大小跟随系统设置中字体大小的改变
         AutoSizeConfig.getInstance().isExcludeFontScale = true
         XPopup.setPrimaryColor(R.color.colorPrimary)
-
     }
 }

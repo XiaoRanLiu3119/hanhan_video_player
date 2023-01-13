@@ -50,7 +50,24 @@
                     android:layout_height="wrap_content"
                     android:layout_alignParentRight="true"
                     android:textSize="14sp"
-                    tools:text="ijk"/>
+                    android:text="@string/player_manager_ijk"/>
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:id="@+id/rl_clear_cache"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="16dp"
+                android:gravity="center_vertical"
+                android:foreground="?android:selectableItemBackground">
+
+                <TextView
+                    android:id="@+id/tv_title_clear_cache"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="清理缓存"
+                    android:textSize="14sp" />
+
             </RelativeLayout>
 
         </androidx.appcompat.widget.LinearLayoutCompat>

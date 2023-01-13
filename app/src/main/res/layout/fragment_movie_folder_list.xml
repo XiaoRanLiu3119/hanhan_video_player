@@ -11,9 +11,9 @@
         android:layout_width="match_parent"
         android:layout_height="44dp"
         android:background="@color/colorPrimary"
-        app:title="首页"
         app:leftIcon="@null"
         app:lineVisible="false"
+        app:title="本地视频"
         app:titleColor="@color/common_white" />
 
     <com.lihang.ShadowLayout
@@ -23,7 +23,6 @@
         app:hl_cornerRadius="@dimen/common_corners"
         app:hl_layoutBackground="@color/colorPrimary"
         >
-
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/rv"
             android:layout_width="match_parent"

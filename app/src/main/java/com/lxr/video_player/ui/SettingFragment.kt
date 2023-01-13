@@ -1,13 +1,18 @@
 package com.lxr.video_player.ui
 
+import com.blankj.utilcode.util.SPUtils
 import com.dyne.myktdemo.base.BaseFragment
 import com.lxj.xpopup.XPopup
-import com.lxj.xpopup.interfaces.OnSelectListener
+import com.lxj.xpopup.interfaces.OnConfirmListener
 import com.lxr.video_player.R
+import com.lxr.video_player.constants.SimpleMessage
 import com.lxr.video_player.databinding.FragmentSettingBinding
+import com.lxr.video_player.utils.SpUtil
+import com.shuyu.gsyvideoplayer.GSYVideoManager
 import com.shuyu.gsyvideoplayer.player.IjkPlayerManager
 import com.shuyu.gsyvideoplayer.player.PlayerFactory
 import com.shuyu.gsyvideoplayer.player.SystemPlayerManager
+import org.greenrobot.eventbus.EventBus
 import tv.danmaku.ijk.media.exo2.Exo2PlayerManager
 
 /**
@@ -18,28 +23,7 @@ import tv.danmaku.ijk.media.exo2.Exo2PlayerManager
  */
 class SettingFragment : BaseFragment<FragmentSettingBinding>() {
 
-    var checkedPlayerManagerPosition: Int = 0
-
     override fun initView() {
-        if (PlayerFactory.getPlayManager() is IjkPlayerManager) {
-            binding.tvPlayerManager.text = resources.getString(R.string.player_manager_ijk)
-        } else {
-            binding.tvPlayerManager.text = resources.getString(R.string.player_manager_exo)
-        }
-        when (PlayerFactory.getPlayManager()) {
-            is IjkPlayerManager -> {
-                binding.tvPlayerManager.text = resources.getString(R.string.player_manager_ijk)
-                checkedPlayerManagerPosition = 0
-            }
-            is Exo2PlayerManager -> {
-                binding.tvPlayerManager.text = resources.getString(R.string.player_manager_exo)
-                checkedPlayerManagerPosition = 1
-            }
-            is SystemPlayerManager -> {
-                binding.tvPlayerManager.text = resources.getString(R.string.player_manager_system)
-                checkedPlayerManagerPosition = 2
-            }
-        }
         binding.rlPlayerManager.setOnClickListener {
             XPopup.Builder(this@SettingFragment.context)
                 .asCenterList(
@@ -51,12 +35,33 @@ class SettingFragment : BaseFragment<FragmentSettingBinding>() {
                     )
                 ) { position, _ ->
                     when (position) {
-                        0 -> PlayerFactory.setPlayManager(IjkPlayerManager::class.java)
-                        1 -> PlayerFactory.setPlayManager(Exo2PlayerManager::class.java)
-                        2 -> PlayerFactory.setPlayManager(SystemPlayerManager::class.java)
+                        0 -> {
+                            PlayerFactory.setPlayManager(IjkPlayerManager::class.java)
+                            binding.tvPlayerManager.text = resources.getString(R.string.player_manager_ijk)
+                        }
+                        1 -> {
+                            PlayerFactory.setPlayManager(Exo2PlayerManager::class.java)
+                            binding.tvPlayerManager.text = resources.getString(R.string.player_manager_exo)
+                        }
+                        2 -> {
+                            PlayerFactory.setPlayManager(SystemPlayerManager::class.java)
+                            binding.tvPlayerManager.text = resources.getString(R.string.player_manager_system)
+                        }
                     }
-                }.setCheckedPosition(checkedPlayerManagerPosition).show()
+                }.show()
+        }
 
+        binding.rlClearCache.setOnClickListener {
+            XPopup.Builder(this@SettingFragment.context)
+                .asConfirm("提示","确认清理缓存?",object :OnConfirmListener{
+                    override fun onConfirm() {
+                        SpUtil.clearAll()
+                        SPUtils.getInstance().clear()
+                        GSYVideoManager.instance().clearAllDefaultCache(this@SettingFragment.context)
+                        //通知视频列表等,清楚通过缓存获取的状态(播放记录及播放时间等)
+                        EventBus.getDefault().post(SimpleMessage.REFRESH)
+                    }
+                }).show()
         }
     }
 

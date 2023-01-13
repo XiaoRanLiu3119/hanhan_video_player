@@ -80,4 +80,6 @@ dependencies {
     implementation 'nl.joery.animatedbottombar:library:1.1.0'
     //标题栏
     implementation 'com.github.getActivity:TitleBar:10.0'
+    //eventbus消息
+    implementation 'org.greenrobot:eventbus:3.1.1'
 }

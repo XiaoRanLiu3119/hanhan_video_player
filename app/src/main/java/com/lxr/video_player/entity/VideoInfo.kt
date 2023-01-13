@@ -14,7 +14,7 @@ data class VideoInfo(
      var size: Long = 0,//大小
      var displayName: String? = null,//视频名字,不带后缀
      var title: String? = null,//视频标题,带后缀
-     var duration: String? = null,//时长,部分视频损坏/其他原因没有
+     var duration: Long = 0,//时长,部分视频损坏/其他原因没有
      var resolution: String? = null,//分辨率
      var isPrivate:Int  = 0,//私密?
      var bucketId: String? = null,//装载(文件夹)id

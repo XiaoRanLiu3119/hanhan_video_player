@@ -7,7 +7,7 @@
 <!--    通用颜色-->
     <color name="common_white">#FFFFFF</color>
     <color name="common_black">#000000</color>
-    <color name="common_light_gray_line">#e5e5e5</color>
+    <color name="common_light_gray_color">#e6e6e6</color>
 
 <!--    制定颜色-->
     <!--    页面背景色,activity.fragment等-->
@@ -20,5 +20,6 @@
     <color name="textColorPrimaryLighter">#666666</color>
     <!--    提示文本,edittext等-->
     <color name="textHint">#999999</color>
+
 
 </resources>
