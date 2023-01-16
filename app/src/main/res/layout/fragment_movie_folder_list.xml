@@ -1,11 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
     android:background="@color/bg_page"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+    android:orientation="vertical">
+
     <com.hjq.bar.TitleBar
         android:id="@+id/title_bar"
         android:layout_width="match_parent"
@@ -16,19 +17,47 @@
         app:title="本地视频"
         app:titleColor="@color/common_white" />
 
+    <LinearLayout
+        android:id="@+id/ll_play_history_container"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:visibility="gone"
+        android:orientation="vertical">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="18dp"
+            android:text="播放历史" />
+
+        <com.lihang.ShadowLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="14dp"
+            app:hl_cornerRadius="@dimen/common_corners"
+            app:hl_layoutBackground="@color/colorPrimary">
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/rv_play_history"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                tools:listitem="@layout/item_play_history" />
+        </com.lihang.ShadowLayout>
+    </LinearLayout>
+
     <com.lihang.ShadowLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="14dp"
         app:hl_cornerRadius="@dimen/common_corners"
-        app:hl_layoutBackground="@color/colorPrimary"
-        >
+        app:hl_layoutBackground="@color/colorPrimary">
+
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/rv"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            tools:listitem="@layout/item_folder"
-            />
+            tools:listitem="@layout/item_folder" />
     </com.lihang.ShadowLayout>
 
 

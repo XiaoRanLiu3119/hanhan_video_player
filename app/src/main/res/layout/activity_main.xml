@@ -13,24 +13,16 @@
         android:layout_height="0dp"
         android:layout_weight="1"/>
 
-    <nl.joery.animatedbottombar.AnimatedBottomBar
-        android:id="@+id/bottom_bar"
-        android:background="@color/colorPrimary"
+    <com.google.android.material.bottomnavigation.BottomNavigationView
+        android:id="@+id/bottom_nav"
         android:layout_width="match_parent"
-        android:layout_height="46dp"
-        app:abb_selectedTabType="icon"
-        app:abb_indicatorLocation="bottom"
-        app:abb_indicatorMargin="30dp"
-        app:abb_indicatorAppearance="round"
-        app:abb_tabColorSelected="@color/colorAccent"
-        app:abb_indicatorColor="@color/colorAccent"
-        app:abb_tabColor="@color/common_white"
-        app:abb_tabAnimation="fade"
-        app:abb_textStyle="bold"
-        app:abb_rippleEnabled="true"
-        app:abb_indicatorHeight="4dp"
-        app:abb_tabs="@menu/tabs_bottom"
-        app:abb_selectedIndex="0" />
+        android:background="@color/colorPrimary"
+        android:layout_height="wrap_content"
+        app:labelVisibilityMode="labeled"
+        app:itemIconTint="@drawable/bottom_navigation_item_selector"
+        app:itemTextColor="@drawable/bottom_navigation_item_selector"
+        app:menu="@menu/tabs_bottom"
+        />
 
 
 </LinearLayout>

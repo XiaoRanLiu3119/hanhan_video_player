@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.os.Environment
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
+import androidx.navigation.ui.setupWithNavController
 import androidx.viewpager2.adapter.FragmentStateAdapter
 import androidx.viewpager2.widget.ViewPager2
 import com.blankj.utilcode.util.ActivityUtils
@@ -30,7 +31,12 @@ class MainActivity : BaseActivity<ActivityMainBinding>() {
 
             override fun createFragment(position: Int): Fragment = fragments[position]
         }
-        binding.bottomBar.setupWithViewPager2(binding.vp2)
+
+        binding.vp2.isUserInputEnabled = false
+        binding.bottomNav.setOnNavigationItemSelectedListener {
+            binding.vp2.currentItem = it.order
+            true
+        }
     }
 
     var exitTime = 0L

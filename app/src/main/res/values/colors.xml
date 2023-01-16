@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <color name="colorPrimary">#292635</color>
-    <color name="colorPrimaryDark">#0d1117</color>
-    <color name="colorAccent">#6000ea</color>
+    <color name="colorPrimaryDark">#202223</color>
+    <color name="colorAccent">#ef9608</color>
 
 <!--    通用颜色-->
     <color name="common_white">#FFFFFF</color>
@@ -11,7 +11,7 @@
 
 <!--    制定颜色-->
     <!--    页面背景色,activity.fragment等-->
-    <color name="bg_page">#0d1117</color>
+    <color name="bg_page">#000000</color>
     <!--    列表背景色,标题栏导航栏,列表等-->
     <color name="bg_list">#292635</color>
     <!--    文字主要颜色-->
@@ -20,6 +20,10 @@
     <color name="textColorPrimaryLighter">#666666</color>
     <!--    提示文本,edittext等-->
     <color name="textHint">#999999</color>
+
+
+    <color name="primaryGradientStart">#383838</color>
+    <color name="primaryGradientEnd">#202223</color>
 
 
 </resources>

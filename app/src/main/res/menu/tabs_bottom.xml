@@ -3,9 +3,11 @@
     <item
         android:id="@+id/tab_home"
         android:icon="@mipmap/ic_home"
+        android:orderInCategory="0"
         android:title="@string/home" />
     <item
-        android:id="@+id/tab_alarm"
+        android:id="@+id/tab_setting"
         android:icon="@mipmap/ic_setting"
+        android:orderInCategory="1"
         android:title="@string/setting" />
 </menu>

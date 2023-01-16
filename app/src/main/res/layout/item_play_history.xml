@@ -12,7 +12,7 @@
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/item"
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="80dp"
         android:paddingHorizontal="10dp"
         android:foreground="?android:selectableItemBackground"
@@ -36,11 +36,25 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent">
 
+                <TextView
+                    android:id="@+id/tv_name"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:ellipsize="end"
+                    android:gravity="start"
+                    android:maxLines="1"
+                    android:text='@{m.displayName}'
+                    android:textColor="@color/common_white"
+                    android:textSize="12sp"
+                    android:background="#4D999999"
+                    android:elevation="1dp"
+                    tools:text="谍影重重" />
+
                 <ImageView
                     android:id="@+id/iv"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:src="@mipmap/iv_video"/>
+                    android:src="@mipmap/iv_video" />
 
                 <ProgressBar
                     android:id="@+id/progressBar"
@@ -51,25 +65,6 @@
                     android:layout_height="2dp"/>
             </RelativeLayout>
         </com.lihang.ShadowLayout>
-
-
-        <TextView
-            android:id="@+id/tv_name"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="16dp"
-            android:gravity="start"
-            app:layout_constrainedWidth="true"
-            android:layout_marginTop="8dp"
-            android:ellipsize="end"
-            android:maxLines="1"
-            android:text='@{m.displayName}'
-            android:textColor="@color/common_white"
-            android:textSize="16sp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@+id/iv_container"
-            app:layout_constraintTop_toTopOf="parent"
-            tools:text="谍影重重" />
 
         <TextView
             android:id="@+id/tv_duration"
@@ -82,31 +77,6 @@
             app:layout_constraintBottom_toBottomOf="@+id/iv_container"
             app:layout_constraintStart_toStartOf="@+id/iv_container"
             tools:text="00:00" />
-
-        <TextView
-            android:id="@+id/textView"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="8dp"
-            android:text="@{ConvertUtils.byte2FitMemorySize(m.size)}"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toStartOf="@+id/tv_name"
-            android:textColor="@color/common_white"
-            android:textSize="12sp"
-            tools:text="222M" />
-
-        <TextView
-            android:id="@+id/textView2"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="20dp"
-            android:text="@{m.resolution}"
-            tools:text="720x1080"
-            android:textColor="@color/common_white"
-            android:textSize="12sp"
-            app:layout_constraintLeft_toRightOf="@+id/textView"
-            app:layout_constraintBottom_toBottomOf="@+id/textView"
-            app:layout_constraintTop_toTopOf="@+id/textView" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>
