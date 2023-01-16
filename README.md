@@ -2,14 +2,18 @@
 一款使用kotlin开发的本地视频播放器.
 经常上下班在没网的地铁上看下好的电影,暂未发现适合自己的的播放器,写来自用,提供给需要的   
 基于[ GSYVideoPlayer](https://github.com/CarGuo/GSYVideoPlayer)   
-截图   
+[下载体验](https://www.pgyer.com/hanhan_video_player)   
+   
+## 提示
+项目代码为熟悉kotlin所编写,且未做优化,仅供参考   
+   
+部分截图   
    
 ![主页面](https://github.com/XiaoRanLiu3119/hanhan_video_player/blob/master/screenshot/main.jpg)
 ![视频列表](https://github.com/XiaoRanLiu3119/hanhan_video_player/blob/master/screenshot/video_list.jpg)
-![播放器](https://github.com/XiaoRanLiu3119/hanhan_video_player/blob/master/screenshot/player.jpg)
-![设置](https://github.com/XiaoRanLiu3119/hanhan_video_player/blob/master/screenshot/setting.jpg)
-## 提示
-项目代码为熟悉kotlin所编写,且未做优化,仅供参考
+![播放](https://github.com/XiaoRanLiu3119/hanhan_video_player/blob/master/screenshot/player.jpg)   
+   
+   
 ## 开发环境
 - Android Studio Chipmunk 2021.2.1
 - kotlin.android 1.7.10
