@@ -5,6 +5,21 @@ plugins {
 }
 
 android {
+    signingConfigs {
+        release {
+            keyAlias = 'key0'
+            storeFile file('..\\hh.jks')
+            storePassword '123456'
+            keyPassword '123456'
+        }
+        debug {
+            keyAlias = 'key0'
+            storeFile file('..\\hh.jks')
+            storePassword '123456'
+            keyPassword '123456'
+        }
+    }
+
     compileSdk 32
     defaultConfig {
         applicationId "com.lxr.video_player"
@@ -14,6 +29,23 @@ android {
         versionName "1.0"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+
+        ndk {
+            //设置支持的SO库架构（开发者可以根据需要，选择一个或多个平台的so）
+            abiFilters "armeabi-v7a", "arm64-v8a"
+        }
+    }
+
+    // 执行配置
+    applicationVariants.all { variant ->
+        // Apk 输出配置
+        variant.outputs.all { output ->
+            outputFileName = rootProject.getName() + '_v' + variant.versionName + '_' + variant.buildType.name
+            if (variant.buildType.name == buildTypes.release.getName()) {
+                outputFileName += '_' + new Date().format("yyyyMMdd")
+            }
+            outputFileName += '.apk'
+        }
     }
 
     buildTypes {
@@ -51,8 +83,6 @@ dependencies {
     implementation "androidx.lifecycle:lifecycle-viewmodel:$lifecycle_version"
     implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:$lifecycle_version"
 
-    //播放器
-    implementation 'com.github.CarGuo.GSYVideoPlayer:GSYVideoPlayer:v8.3.4-release-jitpack'
     //权限
     implementation 'com.github.getActivity:XXPermissions:16.6'
     //图片加载
@@ -82,4 +112,11 @@ dependencies {
     implementation 'com.github.getActivity:TitleBar:10.0'
     //eventbus消息
     implementation 'org.greenrobot:eventbus:3.1.1'
+
+    //播放器
+    implementation 'com.github.CarGuo.GSYVideoPlayer:gsyVideoPlayer-java:v8.3.4-release-jitpack'
+    implementation 'com.github.CarGuo.GSYVideoPlayer:GSYVideoPlayer-exo2:v8.3.4-release-jitpack'
+    //根据你的需求ijk模式的so
+    implementation 'com.github.CarGuo.GSYVideoPlayer:gsyVideoPlayer-arm64:v8.3.4-release-jitpack'
+    implementation 'com.github.CarGuo.GSYVideoPlayer:gsyVideoPlayer-armv7a:v8.3.4-release-jitpack'
 }
