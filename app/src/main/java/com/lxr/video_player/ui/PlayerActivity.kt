@@ -3,8 +3,11 @@ package com.lxr.video_player.ui
 import android.content.res.Configuration
 import android.util.DisplayMetrics
 import android.view.View
+import androidx.core.view.isVisible
+import com.blankj.utilcode.util.DeviceUtils
 import com.blankj.utilcode.util.GsonUtils
 import com.blankj.utilcode.util.SPUtils
+import com.blankj.utilcode.util.VibrateUtils
 import com.dyne.myktdemo.base.BaseActivity
 import com.google.common.reflect.TypeToken
 import com.lxr.video_player.action.OnLongPressUpListener
@@ -76,9 +79,11 @@ open class PlayerActivity : BaseActivity<ActivityPlayerBinding>(), CancelAdapt {
             //长按监听
             override fun onLongPressIsStart(start: Boolean) {
                 if (start) {
-                    //todo 添加倍速播放dialog
+                    VibrateUtils.vibrate(100)
+                    binding.llSpeed.isVisible = true
                     binding.videoPlayer.setSpeedPlaying(2F, false)
                 } else {
+                    binding.llSpeed.isVisible = false
                     binding.videoPlayer.setSpeedPlaying(1F, false)
                 }
             }

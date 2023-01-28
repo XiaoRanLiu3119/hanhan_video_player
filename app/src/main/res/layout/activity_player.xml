@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -11,4 +11,35 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_centerInParent="true" />
-</LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/ll_speed"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_margin="30dp"
+        android:gravity="center_vertical"
+        android:visibility="gone"
+        tools:visibility="visible">
+
+        <com.airbnb.lottie.LottieAnimationView
+            android:id="@+id/lt_speed"
+            android:layout_width="60dp"
+            android:layout_height="30dp"
+            android:scaleX="3"
+            android:scaleY="2"
+            app:lottie_autoPlay="true"
+            android:scaleType="centerCrop"
+            app:lottie_fileName="forward_speed.json"
+            app:lottie_loop="true"
+            app:lottie_colorFilter="@color/common_white"
+            app:lottie_repeatMode="restart"/>
+        <TextView
+            android:id="@+id/tv_speed"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/common_white"
+
+            android:text="2.0"/>
+    </LinearLayout>
+</RelativeLayout>
