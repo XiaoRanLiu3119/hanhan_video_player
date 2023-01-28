@@ -1,8 +1,6 @@
 package com.lxr.video_player.utils
 
-import android.database.Cursor
 import android.provider.MediaStore
-import com.blankj.utilcode.util.LogUtils
 import com.lxr.video_player.MyApp
 import com.lxr.video_player.entity.VideoInfo
 

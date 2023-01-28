@@ -4,7 +4,6 @@ import android.content.Intent
 import android.os.Handler
 import android.widget.ProgressBar
 import android.widget.TextView
-import androidx.core.view.postDelayed
 import com.blankj.utilcode.util.*
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.engine.DiskCacheStrategy
@@ -19,13 +18,11 @@ import com.lxj.xpopup.interfaces.OnSelectListener
 import com.lxr.video_player.R
 import com.lxr.video_player.constants.SimpleMessage
 import com.lxr.video_player.databinding.ActivityVideoListBinding
-import com.lxr.video_player.entity.VideoFolder
 import com.lxr.video_player.entity.VideoInfo
 import com.lxr.video_player.utils.SpUtil
 import com.lxr.video_player.utils.Utils
 import com.shuyu.gsyvideoplayer.utils.CommonUtil
 import org.greenrobot.eventbus.EventBus
-import java.io.File
 
 
 /**
@@ -80,10 +77,8 @@ class LocalVideoListActivity : BaseActivity<ActivityVideoListBinding>() {
                 }
                 onClick(R.id.item) {
                     val intent = Intent(this@LocalVideoListActivity, PlayerActivity::class.java)
-                    intent.putExtra("id", getModel<VideoInfo>().id.toString())
-                    intent.putExtra("path", getModel<VideoInfo>().path)
-                    intent.putExtra("title", getModel<VideoInfo>().title)
-                    intent.putExtra("duration", getModel<VideoInfo>().duration)
+                    intent.putExtra("videoList", GsonUtils.toJson(models))
+                    intent.putExtra("position",modelPosition)
                     startActivity(intent)
                 }
                 onLongClick(R.id.item) {

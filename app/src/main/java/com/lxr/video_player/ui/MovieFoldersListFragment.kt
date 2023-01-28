@@ -5,6 +5,7 @@ import android.widget.ProgressBar
 import android.widget.TextView
 import androidx.core.view.isVisible
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.blankj.utilcode.util.GsonUtils
 import com.blankj.utilcode.util.SPUtils
 import com.blankj.utilcode.util.ToastUtils
 import com.bumptech.glide.Glide
@@ -74,10 +75,8 @@ class MovieFoldersListFragment : BaseFragment<FragmentMovieFolderListBinding>() 
                 }
                 onClick(R.id.item) {
                     val intent = Intent(this@MovieFoldersListFragment.context, PlayerActivity::class.java)
-                    intent.putExtra("id", getModel<VideoInfo>().id.toString())
-                    intent.putExtra("path", getModel<VideoInfo>().path)
-                    intent.putExtra("title", getModel<VideoInfo>().title)
-                    intent.putExtra("duration", getModel<VideoInfo>().duration)
+                    intent.putExtra("videoList", GsonUtils.toJson(models))
+                    intent.putExtra("position",modelPosition)
                     startActivity(intent)
                 }
             }
@@ -161,8 +160,8 @@ class MovieFoldersListFragment : BaseFragment<FragmentMovieFolderListBinding>() 
 
         //有历史记录的
         val mutablePlayHistoryList = videoList.filter {//过滤出有历史播放进度和总时长的
-            SpUtil.getLong(it.id.toString()) != 0L && SPUtils.getInstance()
-                .getLong(it.id.toString(), 0L) != 0L
+            SpUtil.getLong(it.id.toString()) != 0L && (SPUtils.getInstance()
+                .getLong(it.id.toString(), 0L) != 0L || it.duration!=0L)
         }.toMutableList()
         if (mutablePlayHistoryList.size!=0){
             binding.llPlayHistoryContainer.isVisible = true
