@@ -98,8 +98,7 @@ class MovieFoldersListFragment : BaseFragment<FragmentMovieFolderListBinding>() 
                         LocalVideoListActivity::class.java
                     )
                     intent.putExtra("title", getModel<VideoFolder>().name)
-                    //todo 用文件夹id传入,详情页再按需筛选,这页面是用 bucketDisplayName给列表分组的 但可能有重复文件夹,暂时搁置 遇见问题解决
-                    intent.putExtra("bucketId", getModel<VideoFolder>().videoList[0].bucketId)
+                    intent.putExtra("bucketDisplayName", getModel<VideoFolder>().videoList[0].bucketDisplayName)
                     startActivity(intent)
                 }
             }
@@ -152,7 +151,7 @@ class MovieFoldersListFragment : BaseFragment<FragmentMovieFolderListBinding>() 
         val groupByBucketIdMap = videoList.groupBy {//按文件夹分组
             it.bucketDisplayName
         }
-        for ((k, v) in groupByBucketIdMap) {//每个分组的k为文件夹名字,值为所有包含当前key的对象的集合,设置到文件夹对象并装文件夹集合
+        for ((k, v) in groupByBucketIdMap) {//按文件夹名字区分,一样的名字装在一起,每个分组的k为文件夹名字,值为所有包含当前key的对象的集合,设置到文件夹对象并装文件夹集合
             folderList.add(VideoFolder(k, v as MutableList<VideoInfo>))
         }
         //给列表设置数据

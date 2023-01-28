@@ -36,12 +36,12 @@ class LocalVideoListActivity : BaseActivity<ActivityVideoListBinding>() {
     /**
      * 当前文件夹id,由文件夹列表传进
      */
-    var bucketId:String = ""
+    var bucketDisplayName:String? = ""
 
     override fun initView() {
 
         binding.titleBar.leftTitle = intent.getStringExtra("title")
-        bucketId = intent.getStringExtra("bucketId").toString()
+        bucketDisplayName = intent.getStringExtra("bucketDisplayName")
 
         binding.rv.run {
             linear().divider(R.drawable.divider).setup {
@@ -127,7 +127,7 @@ class LocalVideoListActivity : BaseActivity<ActivityVideoListBinding>() {
      */
     private fun updateListData() {
         binding.rv.models = Utils.getVideoList().filter {//筛选出当前文件夹的视频
-            it.bucketId.equals(bucketId)
+            it.bucketDisplayName.equals(bucketDisplayName)
         }.toMutableList()
     }
 
