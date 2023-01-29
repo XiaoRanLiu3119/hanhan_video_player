@@ -131,7 +131,7 @@ class LocalVideoListActivity : BaseActivity<ActivityVideoListBinding>() {
         }.toMutableList()
     }
 
-    override fun onEvent(simpleMessage: String?) {
+    override fun onSimpleMessage(simpleMessage: String?) {
         if (simpleMessage.equals(SimpleMessage.REFRESH)) {
             Handler().postDelayed({//文件变动需要主动让系统扫描,为避免未扫描完毕,加个延迟
                 updateListData()

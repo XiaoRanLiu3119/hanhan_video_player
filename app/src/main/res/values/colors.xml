@@ -20,7 +20,8 @@
     <color name="textColorPrimaryLighter">#666666</color>
     <!--    提示文本,edittext等-->
     <color name="textHint">#999999</color>
-
+    <!--    警示黄色-->
+    <color name="warn">#ffcb6b</color>
 
     <color name="primaryGradientStart">#383838</color>
     <color name="primaryGradientEnd">#202223</color>

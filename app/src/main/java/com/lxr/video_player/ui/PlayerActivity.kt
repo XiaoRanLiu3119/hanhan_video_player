@@ -1,29 +1,30 @@
 package com.lxr.video_player.ui
 
+import android.content.Intent
+import android.content.IntentFilter
 import android.content.res.Configuration
 import android.util.DisplayMetrics
 import android.view.View
 import androidx.core.view.isVisible
-import com.blankj.utilcode.util.DeviceUtils
 import com.blankj.utilcode.util.GsonUtils
-import com.blankj.utilcode.util.SPUtils
 import com.blankj.utilcode.util.VibrateUtils
 import com.dyne.myktdemo.base.BaseActivity
 import com.google.common.reflect.TypeToken
 import com.lxr.video_player.action.OnLongPressUpListener
+import com.lxr.video_player.constants.Constants
+import com.lxr.video_player.constants.MessageEvent
 import com.lxr.video_player.databinding.ActivityPlayerBinding
 import com.lxr.video_player.entity.VideoInfo
-import com.lxr.video_player.utils.SpUtil
+import com.lxr.video_player.receiver.BatteryReceiver
 import com.shuyu.gsyvideoplayer.GSYVideoManager
-import com.shuyu.gsyvideoplayer.listener.GSYStateUiListener
 import com.shuyu.gsyvideoplayer.utils.OrientationUtils
-import com.shuyu.gsyvideoplayer.video.base.GSYVideoView
 import me.jessyan.autosize.internal.CancelAdapt
 
 
 open class PlayerActivity : BaseActivity<ActivityPlayerBinding>(), CancelAdapt {
 
     var orientationUtils: OrientationUtils? = null
+    var batteryReceiver = BatteryReceiver()
 
     override fun initBeforeInitView() {
         initFontScale()
@@ -31,6 +32,13 @@ open class PlayerActivity : BaseActivity<ActivityPlayerBinding>(), CancelAdapt {
 
     override fun initView() {
         init()
+        registerReceiver(batteryReceiver, IntentFilter(Intent.ACTION_BATTERY_CHANGED))
+    }
+
+    override fun onEvent(event: MessageEvent) {
+        if (event.type == Constants.MSG_TYPE_BATTERY) {
+            binding.videoPlayer.updateBattery(event.message.toInt())
+        }
     }
 
     /**
@@ -51,7 +59,8 @@ open class PlayerActivity : BaseActivity<ActivityPlayerBinding>(), CancelAdapt {
 
         val videoListJson = intent.getStringExtra("videoList")
         val position = intent.getIntExtra("position", 0)
-        val videoList = GsonUtils.fromJson<List<VideoInfo>>(videoListJson,
+        val videoList = GsonUtils.fromJson<List<VideoInfo>>(
+            videoListJson,
             object : TypeToken<List<VideoInfo>>() {}.type
         )
 
@@ -104,6 +113,8 @@ open class PlayerActivity : BaseActivity<ActivityPlayerBinding>(), CancelAdapt {
 
     override fun onDestroy() {
         super.onDestroy()
+        unregisterReceiver(batteryReceiver)
+
         GSYVideoManager.releaseAllVideos()
         if (orientationUtils != null) orientationUtils!!.releaseListener()
     }

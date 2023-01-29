@@ -1,6 +1,9 @@
 package com.lxr.video_player.widget
 
 import android.content.Context
+import android.content.Intent
+import android.content.IntentFilter
+import android.os.BatteryManager
 import android.text.TextUtils
 import android.util.AttributeSet
 import android.view.GestureDetector
@@ -40,6 +43,8 @@ class LongPressPlayer: StandardGSYVideoPlayer {
     constructor(context: Context?) : super(context)
     constructor(context: Context?, attrs: AttributeSet?) : super(context, attrs)
 
+    private lateinit var batteryView:BatteryView
+
     protected var uriList: List<VideoInfo> = ArrayList()
 
     override fun getLayoutId(): Int {
@@ -48,6 +53,12 @@ class LongPressPlayer: StandardGSYVideoPlayer {
 
     override fun init(context: Context?) {
         super.init(context)
+
+        batteryView  = findViewById(R.id.battery)
+        findViewById<ImageView>(R.id.iv_next).setOnClickListener {
+            playNext()
+        }
+
         post {
             gestureDetector = GestureDetector(
                 getContext().applicationContext,
@@ -69,10 +80,6 @@ class LongPressPlayer: StandardGSYVideoPlayer {
                         pressUpListener?.onLongPressIsStart(true)
                     }
                 })
-        }
-
-        findViewById<ImageView>(R.id.iv_next).setOnClickListener {
-            playNext()
         }
     }
 
@@ -168,5 +175,9 @@ class LongPressPlayer: StandardGSYVideoPlayer {
             ToastUtils.showShort("最后一集了")
         }
         return false
+    }
+
+    fun updateBattery(battery:Int){
+        batteryView.battery = battery
     }
 }

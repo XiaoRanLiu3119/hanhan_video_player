@@ -14,6 +14,7 @@ import com.hjq.bar.OnTitleBarListener
 import com.hjq.bar.TitleBar
 import com.lxj.xpopup.XPopup
 import com.lxj.xpopup.impl.LoadingPopupView
+import com.lxr.video_player.constants.MessageEvent
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
@@ -46,9 +47,13 @@ abstract class BaseActivity<T : ViewBinding> : AppCompatActivity(), OnTitleBarLi
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
-    open fun onEvent(simpleMessage: String?) {
+    open fun onSimpleMessage(simpleMessage: String?) {
     }
 
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    open fun onEvent(event: MessageEvent) {
+
+    }
 
     /**
      * 布局初始化之前

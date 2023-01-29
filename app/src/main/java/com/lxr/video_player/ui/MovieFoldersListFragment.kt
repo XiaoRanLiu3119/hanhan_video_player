@@ -41,7 +41,7 @@ class MovieFoldersListFragment : BaseFragment<FragmentMovieFolderListBinding>() 
     val folderList = mutableListOf<VideoFolder>()
 
     override fun initView() {
-
+        //todo 为了播放视频和音频,我们需要访问您设备文件的权限
         binding.rvPlayHistory.run {//初始化历史记录列表
             linear(orientation = LinearLayoutManager.HORIZONTAL).setup {
                 addType<VideoInfo>(R.layout.item_play_history)

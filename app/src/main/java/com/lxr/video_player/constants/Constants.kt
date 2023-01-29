@@ -6,6 +6,11 @@ package com.lxr.video_player.constants
  * @Date        : on 2023/1/13 09:24.
  * @Description :
  */
-object ConfigKey {
+object Constants {
+
+    /**
+     * 消息类型  电量
+     */
+    const val MSG_TYPE_BATTERY = "msg_type_battery"
 
 }
