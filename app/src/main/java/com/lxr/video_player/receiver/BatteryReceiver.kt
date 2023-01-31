@@ -17,10 +17,15 @@ import org.greenrobot.eventbus.EventBus
  * @Description :
  */
 class BatteryReceiver :BroadcastReceiver() {
+
+    var currentBattery:Int = -1
     override fun onReceive(context: Context?, intent: Intent?) {
         if (Intent.ACTION_BATTERY_CHANGED == intent!!.action) {
             val level = intent.getIntExtra("level", 0)
-            EventBus.getDefault().post(MessageEvent(Constants.MSG_TYPE_BATTERY,level.toString()))
+            if (currentBattery!=level){//电量变化
+                currentBattery = level
+                EventBus.getDefault().post(MessageEvent(Constants.MSG_TYPE_BATTERY,currentBattery.toString()))
+            }
         }
     }
 }

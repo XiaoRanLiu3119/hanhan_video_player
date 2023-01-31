@@ -26,16 +26,15 @@
         <activity
             android:name=".ui.PlayerActivity"
             android:configChanges="keyboard|keyboardHidden|orientation|screenSize|screenLayout|smallestScreenSize|uiMode"
-            android:exported="false"
             android:screenOrientation="landscape"
             android:theme="@style/FullTransTheme" />
         <activity
             android:name=".ui.MainActivity"
-            android:configChanges="keyboard|keyboardHidden|orientation|screenSize|screenLayout|smallestScreenSize|uiMode"
-            android:exported="true"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="portrait"
+            android:launchMode="singleTask"/>
         <activity
             android:name=".ui.LocalVideoListActivity"
+            android:launchMode="singleTop"
             android:screenOrientation="portrait" />
 
         <activity
