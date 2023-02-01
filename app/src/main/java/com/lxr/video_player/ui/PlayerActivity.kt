@@ -85,15 +85,17 @@ open class PlayerActivity : BaseActivity<ActivityPlayerBinding>(), CancelAdapt {
         binding.videoPlayer.isReleaseWhenLossAudio = false
 
         binding.videoPlayer.setOnLongPressListener(object : OnLongPressUpListener {
-            //长按监听
+            // 长按监听
             override fun onLongPressIsStart(start: Boolean) {
-                if (start) {
-                    VibrateUtils.vibrate(100)
-                    binding.llSpeed.isVisible = true
-                    binding.videoPlayer.setSpeedPlaying(2F, false)
-                } else {
-                    binding.llSpeed.isVisible = false
-                    binding.videoPlayer.setSpeedPlaying(1F, false)
+                if (binding.videoPlayer.isInPlayingState) {
+                    if (start) {
+                        VibrateUtils.vibrate(100)
+                        binding.llSpeed.isVisible = true
+                        binding.videoPlayer.setSpeedPlaying(2F, false)
+                    } else {
+                        binding.llSpeed.isVisible = false
+                        binding.videoPlayer.setSpeedPlaying(1F, false)
+                    }
                 }
             }
         })

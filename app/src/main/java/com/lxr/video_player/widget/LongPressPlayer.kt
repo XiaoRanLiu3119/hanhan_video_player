@@ -1,9 +1,6 @@
 package com.lxr.video_player.widget
 
 import android.content.Context
-import android.content.Intent
-import android.content.IntentFilter
-import android.os.BatteryManager
 import android.text.TextUtils
 import android.util.AttributeSet
 import android.view.GestureDetector
@@ -21,14 +18,13 @@ import com.shuyu.gsyvideoplayer.listener.GSYStateUiListener
 import com.shuyu.gsyvideoplayer.video.StandardGSYVideoPlayer
 import com.shuyu.gsyvideoplayer.video.base.GSYVideoView
 
-
 /**
- * @Author      : Liu XiaoRan
- * @Email       : 592923276@qq.com
- * @Date        : on 2023/1/12 14:31.
+ * @Author : Liu XiaoRan
+ * @Email : 592923276@qq.com
+ * @Date : on 2023/1/12 14:31.
  * @Description : 自定义播放器,添加:倍速播放,下一集,缓存进度和一些丢失时长信息的视频
  */
-class LongPressPlayer: StandardGSYVideoPlayer {
+class LongPressPlayer : StandardGSYVideoPlayer {
     /**
      * 长按倍速标识,仅长按时开启,长按结束的MotionEvent.ACTION_UP时再关闭,避免点击时也触发倍速播放
      */
@@ -43,9 +39,9 @@ class LongPressPlayer: StandardGSYVideoPlayer {
     constructor(context: Context?) : super(context)
     constructor(context: Context?, attrs: AttributeSet?) : super(context, attrs)
 
-    private lateinit var batteryView:BatteryView
+    private lateinit var batteryView: MyBatteryView
 
-    protected var uriList: List<VideoInfo> = ArrayList()
+    private var uriList: List<VideoInfo> = ArrayList()
 
     override fun getLayoutId(): Int {
         return R.layout.widget_custom_video
@@ -54,7 +50,7 @@ class LongPressPlayer: StandardGSYVideoPlayer {
     override fun init(context: Context?) {
         super.init(context)
 
-        batteryView  = findViewById(R.id.battery)
+        batteryView = findViewById(R.id.battery)
         findViewById<ImageView>(R.id.iv_next).setOnClickListener {
             playNext()
         }
@@ -79,7 +75,8 @@ class LongPressPlayer: StandardGSYVideoPlayer {
                         idLongPressSpeed = true
                         pressUpListener?.onLongPressIsStart(true)
                     }
-                })
+                }
+            )
         }
     }
 
@@ -107,30 +104,30 @@ class LongPressPlayer: StandardGSYVideoPlayer {
             mTitleTextView.text = videoModel.title
         }
 
-        //设置当前视频id,缓存当前播放进度和时长
+        // 设置当前视频id,缓存当前播放进度和时长
         val currentVideoId = videoModel.id.toString()
-        //监听播放状态通过视频id缓存播放进度和时长
+        // 监听播放状态通过视频id缓存播放进度和时长
         gsyStateUiListener = GSYStateUiListener { state ->
             when (state) {
                 GSYVideoView.CURRENT_STATE_PAUSE, GSYVideoView.CURRENT_STATE_ERROR -> {
                     currentVideoId.let {
-                        //直接home退出/暂停/返回,播放下一集,存储当前影片的播放进度
+                        // 直接home退出/暂停/返回,播放下一集,存储当前影片的播放进度
                         SpUtil.put(it, currentPositionWhenPlaying)
-                        //部分资源没有时长(部分媒体文件用几种系统api都获取不到),在缓存中记录时长 注:这里用sp存时长,,而不是自己的(用id存播放进度了..后续可改用数据库记录每个电影的播放进度.总时长.缩略图.帧图等)
-                        if (videoModel.duration == 0L){//视频没有时长,自己缓存,用于下次显示
-                            SPUtils.getInstance().put(it,duration)
+                        // 部分资源没有时长(部分媒体文件用几种系统api都获取不到),在缓存中记录时长 注:这里用sp存时长,,而不是自己的(用id存播放进度了..后续可改用数据库记录每个电影的播放进度.总时长.缩略图.帧图等)
+                        if (videoModel.duration == 0L) { // 视频没有时长,自己缓存,用于下次显示
+                            SPUtils.getInstance().put(it, duration)
                         }
                     }
                 }
-                GSYVideoView.CURRENT_STATE_AUTO_COMPLETE -> currentVideoId.let {//自动播放完成完成清空该影片缓存的进度
+                GSYVideoView.CURRENT_STATE_AUTO_COMPLETE -> currentVideoId.let { // 自动播放完成完成清空该影片缓存的进度
                     SpUtil.removeKey(it)
                 }
             }
         }
 
-        //设置播放进度
+        // 设置播放进度
         val playPosition = SpUtil.getLong(currentVideoId)
-        if (playPosition != null) {//设置播放位置
+        if (playPosition != null) { // 设置播放位置
             seekOnStart = playPosition
         }
 
@@ -140,16 +137,16 @@ class LongPressPlayer: StandardGSYVideoPlayer {
     /**
      * 设置长按/抬起监听器
      */
-    fun setOnLongPressListener(onLongPressUpListener: OnLongPressUpListener){
+    fun setOnLongPressListener(onLongPressUpListener: OnLongPressUpListener) {
         pressUpListener = onLongPressUpListener
     }
 
     override fun onTouch(v: View?, event: MotionEvent?): Boolean {
-        if (idLongPressSpeed && event?.action  == MotionEvent.ACTION_UP){
+        if (idLongPressSpeed && event?.action == MotionEvent.ACTION_UP) {
             idLongPressSpeed = false
             pressUpListener?.onLongPressIsStart(false)
         }
-       return super.onTouch(v, event)
+        return super.onTouch(v, event)
     }
 
     /**
@@ -159,25 +156,25 @@ class LongPressPlayer: StandardGSYVideoPlayer {
      */
     private fun playNext(): Boolean {
         if (mPlayPosition < uriList.size - 1) {
-            //直接home退出/暂停/返回,播放下一集,存储当前影片的播放进度
+            // 直接home退出/暂停/返回,播放下一集,存储当前影片的播放进度
             SpUtil.put(uriList[mPlayPosition].id.toString(), currentPositionWhenPlaying)
-            //记录下一集播放位置
+            // 记录下一集播放位置
             mPlayPosition += 1
             val nextVideoModel: VideoInfo = uriList[mPlayPosition]
             mSaveChangeViewTIme = 0
-            setUp(uriList,mPlayPosition)
+            setUp(uriList, mPlayPosition)
             if (!TextUtils.isEmpty(nextVideoModel.title) && mTitleTextView != null) {
                 mTitleTextView.text = nextVideoModel.title
             }
             startPlayLogic()
             return true
-        }else{
+        } else {
             ToastUtils.showShort("最后一集了")
         }
         return false
     }
 
-    fun updateBattery(battery:Int){
-        batteryView.battery = battery
+    fun updateBattery(battery: Int) {
+        batteryView.updateBattery(battery)
     }
 }

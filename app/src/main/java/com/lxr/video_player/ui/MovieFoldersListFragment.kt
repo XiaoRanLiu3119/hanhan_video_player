@@ -29,20 +29,20 @@ import com.lxr.video_player.utils.Utils
 import com.shuyu.gsyvideoplayer.utils.CommonUtil
 
 /**
- * @Author      : Liu XiaoRan
- * @Email       : 592923276@qq.com
- * @Date        : on 2023/1/11 13:52.
+ * @Author : Liu XiaoRan
+ * @Email : 592923276@qq.com
+ * @Date : on 2023/1/11 13:52.
  * @Description :
  */
 class MovieFoldersListFragment : BaseFragment<FragmentMovieFolderListBinding>() {
     /**
      * 文件夹集合
      */
-    val folderList = mutableListOf<VideoFolder>()
+    private val folderList = mutableListOf<VideoFolder>()
 
     override fun initView() {
-        //todo 为了播放视频和音频,我们需要访问您设备文件的权限
-        binding.rvPlayHistory.run {//初始化历史记录列表
+        // todo 为了播放视频和音频,我们需要访问您设备文件的权限
+        binding.rvPlayHistory.run { // 初始化历史记录列表
             linear(orientation = LinearLayoutManager.HORIZONTAL).setup {
                 addType<VideoInfo>(R.layout.item_play_history)
                 onBind {
@@ -50,44 +50,43 @@ class MovieFoldersListFragment : BaseFragment<FragmentMovieFolderListBinding>() 
                         .diskCacheStrategy(DiskCacheStrategy.AUTOMATIC)
                         .placeholder(R.mipmap.iv_video)
                         .centerCrop().into(findView(R.id.iv))
-                    //总时长
+                    // 总时长
                     var duration = ""
-                    if (getModel<VideoInfo>().duration.toInt() == 0) {//缺失时长/缩略图的,从缓存取(如果有)
+                    if (getModel<VideoInfo>().duration.toInt() == 0) { // 缺失时长/缩略图的,从缓存取(如果有)
                         val cacheDuration =
-                            SPUtils.getInstance().getLong(getModel<VideoInfo>().id.toString(),0L)
-                        if (cacheDuration != 0L) {//有缓存
+                            SPUtils.getInstance().getLong(getModel<VideoInfo>().id.toString(), 0L)
+                        if (cacheDuration != 0L) { // 有缓存
                             duration = CommonUtil.stringForTime(cacheDuration)
                             findView<ProgressBar>(R.id.progressBar).max = cacheDuration.toInt()
                         }
-                    } else {//正常视频
+                    } else { // 正常视频
                         duration = CommonUtil.stringForTime(getModel<VideoInfo>().duration)
                         findView<ProgressBar>(R.id.progressBar).max = getModel<VideoInfo>().duration.toInt()
                     }
-
-                    //已播放进度时长
+                    // 已播放进度时长
                     val progressPlayed = SpUtil.getLong(getModel<VideoInfo>().id.toString())
-                    if (progressPlayed != -0L && duration.isNotEmpty()){//有进度且有时长都显示
-                        findView<TextView>(R.id.tv_duration).text = CommonUtil.stringForTime(progressPlayed!!) +"/"+ duration
+                    if (progressPlayed != -0L && duration.isNotEmpty()) { // 有进度且有时长都显示
+                        findView<TextView>(R.id.tv_duration).text = CommonUtil.stringForTime(progressPlayed!!)+ "/" + duration
                         findView<ProgressBar>(R.id.progressBar).progress = progressPlayed.toInt()
-                    }else{//没有进度(也包括没时长,此时是空串,不耽误)
+                    } else { // 没有进度(也包括没时长,此时是空串,不耽误)
                         findView<TextView>(R.id.tv_duration).text = duration
                     }
                 }
                 onClick(R.id.item) {
                     val intent = Intent(this@MovieFoldersListFragment.context, PlayerActivity::class.java)
                     intent.putExtra("videoList", GsonUtils.toJson(models))
-                    intent.putExtra("position",modelPosition)
+                    intent.putExtra("position", modelPosition)
                     startActivity(intent)
                 }
             }
         }
-        binding.rv.run {//初始化文件夹列表
+        binding.rv.run { // 初始化文件夹列表
             linear().divider(R.drawable.divider).setup {
                 setAnimation(AnimationType.SLIDE_BOTTOM)
                 addType<VideoFolder>(R.layout.item_folder)
                 onBind {
                     Glide.with(context)
-                        .load(getModel<VideoFolder>().videoList[0].path)//第一个视频做封面
+                        .load(getModel<VideoFolder>().videoList[0].path) // 第一个视频做封面
                         .diskCacheStrategy(DiskCacheStrategy.AUTOMATIC)
                         .placeholder(R.mipmap.iv_video)
                         .centerCrop().into(findView(R.id.iv))
@@ -116,7 +115,6 @@ class MovieFoldersListFragment : BaseFragment<FragmentMovieFolderListBinding>() 
     }
 
     private fun getPermission() {
-
         XXPermissions.with(this)
             .permission(Permission.MANAGE_EXTERNAL_STORAGE)
             .request(object : OnPermissionCallback {
@@ -146,23 +144,25 @@ class MovieFoldersListFragment : BaseFragment<FragmentMovieFolderListBinding>() 
 
     private fun updateListData() {
         folderList.clear()
-        //全部视频
+        // 全部视频
         val videoList = Utils.getVideoList()
-        val groupByBucketIdMap = videoList.groupBy {//按文件夹分组
+        val groupByBucketIdMap = videoList.groupBy { // 按文件夹分组
             it.bucketDisplayName
         }
-        for ((k, v) in groupByBucketIdMap) {//按文件夹名字区分,一样的名字装在一起,每个分组的k为文件夹名字,值为所有包含当前key的对象的集合,设置到文件夹对象并装文件夹集合
+        for ((k, v) in groupByBucketIdMap) { // 按文件夹名字区分,一样的名字装在一起,每个分组的k为文件夹名字,值为所有包含当前key的对象的集合,设置到文件夹对象并装文件夹集合
             folderList.add(VideoFolder(k, v as MutableList<VideoInfo>))
         }
-        //给列表设置数据
+        // 给列表设置数据
         binding.rv.models = folderList
 
-        //有历史记录的
-        val mutablePlayHistoryList = videoList.filter {//过滤出有历史播放进度和总时长的
-            SpUtil.getLong(it.id.toString()) != 0L && (SPUtils.getInstance()
-                .getLong(it.id.toString(), 0L) != 0L || it.duration!=0L)
+        // 有历史记录的
+        val mutablePlayHistoryList = videoList.filter { // 过滤出有历史播放进度和总时长的
+            SpUtil.getLong(it.id.toString()) != 0L && (
+                SPUtils.getInstance()
+                    .getLong(it.id.toString(), 0L) != 0L || it.duration != 0L
+                )
         }.toMutableList()
-        if (mutablePlayHistoryList.size!=0){
+        if (mutablePlayHistoryList.size != 0) {
             binding.llPlayHistoryContainer.isVisible = true
             binding.rvPlayHistory.models = mutablePlayHistoryList
         }

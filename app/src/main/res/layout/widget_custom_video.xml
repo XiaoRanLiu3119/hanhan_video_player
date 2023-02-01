@@ -172,7 +172,7 @@
             android:layout_height="wrap_content"
             android:layout_marginEnd="10dp"/>
 
-        <com.lxr.video_player.widget.BatteryView
+        <com.lxr.video_player.widget.MyBatteryView
             android:id="@+id/battery"
             android:layout_width="26dp"
             android:layout_height="12dp"
