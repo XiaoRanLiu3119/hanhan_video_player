@@ -76,6 +76,17 @@ class MyBatteryView : View {
         }
     }
 
+    // 电量文字画笔
+    private val boxBatteryTextPaint by lazy {
+        Paint().also {
+            it.color = Color.WHITE
+            it.style = Paint.Style.FILL_AND_STROKE
+            it.textSize = 20f
+            it.textAlign = Paint.Align.CENTER
+            it.strokeWidth = 2f
+        }
+    }
+
     override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
         super.onMeasure(widthMeasureSpec, heightMeasureSpec)
         val specWidthSize = MeasureSpec.getSize(widthMeasureSpec)
@@ -111,6 +122,13 @@ class MyBatteryView : View {
         canvas?.drawRoundRect(boxOut, CORNER, CORNER, boxOutPaint)
         canvas?.drawRoundRect(boxCap, 1F, 1F, boxCapPaint)
         canvas?.drawRoundRect(boxBattery, CORNER / 2, CORNER / 2, boxBatteryPaint)
+
+        val fontMetrics : Paint.FontMetrics = boxBatteryTextPaint.fontMetrics;
+        // 计算文字高度
+        val fontHeight = fontMetrics.bottom - fontMetrics.top
+        // 计算文字baseline
+        val textBaseY = height - (height - fontHeight) / 2 - fontMetrics.bottom;
+        canvas?.drawText(battery.toString(), boxOut.centerX(), textBaseY, boxBatteryTextPaint)
     }
 
     fun updateBattery(battery: Int) {

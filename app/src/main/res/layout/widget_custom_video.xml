@@ -175,7 +175,7 @@
         <com.lxr.video_player.widget.MyBatteryView
             android:id="@+id/battery"
             android:layout_width="26dp"
-            android:layout_height="12dp"
+            android:layout_height="14dp"
             android:layout_marginEnd="16dp"/>
     </LinearLayout>
 
