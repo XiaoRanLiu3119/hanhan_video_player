@@ -5,6 +5,7 @@ import android.widget.ProgressBar
 import android.widget.TextView
 import androidx.core.view.isVisible
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.blankj.utilcode.util.ActivityUtils
 import com.blankj.utilcode.util.GsonUtils
 import com.blankj.utilcode.util.SPUtils
 import com.blankj.utilcode.util.ToastUtils
@@ -19,6 +20,9 @@ import com.dyne.myktdemo.base.BaseFragment
 import com.hjq.permissions.OnPermissionCallback
 import com.hjq.permissions.Permission
 import com.hjq.permissions.XXPermissions
+import com.lxj.xpopup.XPopup
+import com.lxj.xpopup.interfaces.OnCancelListener
+import com.lxj.xpopup.interfaces.OnConfirmListener
 import com.lxr.video_player.R
 import com.lxr.video_player.constants.SimpleMessage
 import com.lxr.video_player.databinding.FragmentMovieFolderListBinding
@@ -41,7 +45,6 @@ class MovieFoldersListFragment : BaseFragment<FragmentMovieFolderListBinding>() 
     private val folderList = mutableListOf<VideoFolder>()
 
     override fun initView() {
-        // todo 为了播放视频和音频,我们需要访问您设备文件的权限
         binding.rvPlayHistory.run { // 初始化历史记录列表
             linear(orientation = LinearLayoutManager.HORIZONTAL).setup {
                 addType<VideoInfo>(R.layout.item_play_history)
@@ -66,7 +69,7 @@ class MovieFoldersListFragment : BaseFragment<FragmentMovieFolderListBinding>() 
                     // 已播放进度时长
                     val progressPlayed = SpUtil.getLong(getModel<VideoInfo>().id.toString())
                     if (progressPlayed != -0L && duration.isNotEmpty()) { // 有进度且有时长都显示
-                        findView<TextView>(R.id.tv_duration).text = CommonUtil.stringForTime(progressPlayed!!)+ "/" + duration
+                        findView<TextView>(R.id.tv_duration).text = CommonUtil.stringForTime(progressPlayed!!) + "/" + duration
                         findView<ProgressBar>(R.id.progressBar).progress = progressPlayed.toInt()
                     } else { // 没有进度(也包括没时长,此时是空串,不耽误)
                         findView<TextView>(R.id.tv_duration).text = duration
@@ -102,7 +105,7 @@ class MovieFoldersListFragment : BaseFragment<FragmentMovieFolderListBinding>() 
                 }
             }
         }
-        getPermission()
+        showPermissionTipPopup()
     }
 
     override fun onResume() {
@@ -114,7 +117,37 @@ class MovieFoldersListFragment : BaseFragment<FragmentMovieFolderListBinding>() 
         }
     }
 
-    private fun getPermission() {
+    private fun showPermissionTipPopup() {
+        this@MovieFoldersListFragment.context?.let {
+            if (!XXPermissions.isGranted(it, Permission.MANAGE_EXTERNAL_STORAGE)) {
+                XPopup.Builder(context)
+                    .dismissOnBackPressed(false)
+                    .dismissOnTouchOutside(false)
+                    .asConfirm(
+                        "提示",
+                        "为了播放视频、音频、获取字幕,我们需要访问您设备文件的权限",
+                        "就不给",
+                        "好哒",
+                        object : OnConfirmListener {
+                            override fun onConfirm() {
+                                getPermission2getData()
+                            }
+                        },
+                        object : OnCancelListener {
+                            override fun onCancel() {
+                                ActivityUtils.finishAllActivities(true)
+                            }
+                        },
+                        false
+                    )
+                    .show()
+            } else {
+                updateListData()
+            }
+        }
+    }
+
+    private fun getPermission2getData() {
         XXPermissions.with(this)
             .permission(Permission.MANAGE_EXTERNAL_STORAGE)
             .request(object : OnPermissionCallback {
@@ -136,6 +169,7 @@ class MovieFoldersListFragment : BaseFragment<FragmentMovieFolderListBinding>() 
                             permissions
                         )
                     } else {
+                        showPermissionTipPopup()
                         ToastUtils.showShort("获取权限失败")
                     }
                 }

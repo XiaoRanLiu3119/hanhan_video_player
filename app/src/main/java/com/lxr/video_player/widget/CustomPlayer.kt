@@ -4,14 +4,12 @@ import android.app.Activity
 import android.content.Context
 import android.graphics.Color
 import android.media.AudioManager
-import android.os.Environment
 import android.text.TextUtils
 import android.util.AttributeSet
 import android.util.TypedValue
 import android.view.*
 import android.view.GestureDetector.SimpleOnGestureListener
 import android.widget.ImageView
-import com.blankj.utilcode.util.LogUtils
 import com.blankj.utilcode.util.SPUtils
 import com.blankj.utilcode.util.ToastUtils
 import com.google.android.exoplayer2.Player
@@ -37,7 +35,7 @@ import com.shuyu.gsyvideoplayer.video.base.GSYVideoView
  * @Date : on 2023/1/12 14:31.
  * @Description : 自定义播放器,添加:倍速播放,下一集,缓存进度和一些丢失时长信息的视频
  */
-class LongPressPlayer : StandardGSYVideoPlayer, Player.Listener {
+class CustomPlayer : StandardGSYVideoPlayer, Player.Listener {
 
     lateinit var mSubtitleView: SubtitleView
     private var mSubTitle: String? = ""
@@ -70,7 +68,7 @@ class LongPressPlayer : StandardGSYVideoPlayer, Player.Listener {
         mSubtitleView = findViewById(R.id.sub_title_view)
         mSubtitleView.setStyle(
             CaptionStyleCompat(
-                Color.RED,
+                Color.WHITE,
                 Color.TRANSPARENT,
                 Color.TRANSPARENT,
                 CaptionStyleCompat.EDGE_TYPE_NONE,
@@ -78,7 +76,7 @@ class LongPressPlayer : StandardGSYVideoPlayer, Player.Listener {
                 null
             )
         )
-        mSubtitleView.setFixedTextSize(TypedValue.COMPLEX_UNIT_DIP, 14f)
+        mSubtitleView.setFixedTextSize(TypedValue.COMPLEX_UNIT_DIP, 16f)
         batteryView = findViewById(R.id.battery)
         findViewById<ImageView>(R.id.iv_next).setOnClickListener {
             playNext()
@@ -269,8 +267,8 @@ class LongPressPlayer : StandardGSYVideoPlayer, Player.Listener {
         statusBar: Boolean
     ): GSYBaseVideoPlayer? {
         val gsyBaseVideoPlayer = super.startWindowFullscreen(context, actionBar, statusBar)
-        val gsyExoSubTitleVideoView: LongPressPlayer =
-            gsyBaseVideoPlayer as LongPressPlayer
+        val gsyExoSubTitleVideoView: CustomPlayer =
+            gsyBaseVideoPlayer as CustomPlayer
         (GSYExoSubTitleVideoManager.instance().player as GSYExoSubTitlePlayerManager)
             .addTextOutputPlaying(gsyExoSubTitleVideoView)
         return gsyBaseVideoPlayer
@@ -282,8 +280,8 @@ class LongPressPlayer : StandardGSYVideoPlayer, Player.Listener {
         gsyVideoPlayer: GSYVideoPlayer?
     ) {
         super.resolveNormalVideoShow(oldF, vp, gsyVideoPlayer)
-        val gsyExoSubTitleVideoView: LongPressPlayer? =
-            gsyVideoPlayer as LongPressPlayer?
+        val gsyExoSubTitleVideoView: CustomPlayer? =
+            gsyVideoPlayer as CustomPlayer?
         (GSYExoSubTitleVideoManager.instance().player as GSYExoSubTitlePlayerManager)
             .removeTextOutput(gsyExoSubTitleVideoView)
     }

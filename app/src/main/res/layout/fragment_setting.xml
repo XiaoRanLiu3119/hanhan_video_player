@@ -55,6 +55,31 @@
                     android:textSize="14sp" />
             </RelativeLayout>
 
+
+            <RelativeLayout
+                android:id="@+id/rl_subtitle_path"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="16dp"
+                android:gravity="center_vertical"
+                android:foreground="?android:selectableItemBackground">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="字幕文件路径"
+                    android:textColor="@color/common_white"
+                    android:textSize="14sp" />
+                <TextView
+                    android:id="@+id/tv_subtitle_path"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:textColor="@color/common_white"
+                    tools:text="/根目录"
+                    android:textSize="14sp" />
+            </RelativeLayout>
+
             <RelativeLayout
                 android:id="@+id/rl_clear_cache"
                 android:layout_width="match_parent"

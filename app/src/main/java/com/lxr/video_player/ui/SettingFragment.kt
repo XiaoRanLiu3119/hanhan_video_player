@@ -2,9 +2,14 @@ package com.lxr.video_player.ui
 
 import com.blankj.utilcode.util.SPUtils
 import com.dyne.myktdemo.base.BaseFragment
+import com.github.gzuliyujiang.filepicker.ExplorerConfig
+import com.github.gzuliyujiang.filepicker.FilePicker
+import com.github.gzuliyujiang.filepicker.annotation.ExplorerMode
+import com.github.gzuliyujiang.filepicker.contract.OnFilePickedListener
 import com.lxj.xpopup.XPopup
 import com.lxj.xpopup.interfaces.OnConfirmListener
 import com.lxr.video_player.R
+import com.lxr.video_player.constants.Constants
 import com.lxr.video_player.constants.SimpleMessage
 import com.lxr.video_player.databinding.FragmentSettingBinding
 import com.lxr.video_player.utils.SpUtil
@@ -14,6 +19,7 @@ import com.shuyu.gsyvideoplayer.player.PlayerFactory
 import com.shuyu.gsyvideoplayer.player.SystemPlayerManager
 import org.greenrobot.eventbus.EventBus
 import tv.danmaku.ijk.media.exo2.Exo2PlayerManager
+import java.io.File
 
 /**
  * @Author      : Liu XiaoRan
@@ -24,6 +30,9 @@ import tv.danmaku.ijk.media.exo2.Exo2PlayerManager
 class SettingFragment : BaseFragment<FragmentSettingBinding>() {
 
     override fun initView() {
+
+        binding.tvSubtitlePath.text = SpUtil.getString(Constants.K_DEFAULT_PATH_4_FIND_SUBTITLE)
+
         binding.rlPlayerManager.setOnClickListener {
             XPopup.Builder(this@SettingFragment.context)
                 .asCenterList(
@@ -62,6 +71,22 @@ class SettingFragment : BaseFragment<FragmentSettingBinding>() {
                         EventBus.getDefault().post(SimpleMessage.REFRESH)
                     }
                 }).show()
+        }
+
+        binding.rlSubtitlePath.setOnClickListener {
+            val config = ExplorerConfig(context)
+            config.rootDir = File(SpUtil.getString(Constants.K_DEFAULT_PATH_4_FIND_SUBTITLE)!!)
+            config.explorerMode = ExplorerMode.DIRECTORY
+            config.setOnFilePickedListener(object :OnFilePickedListener{
+                override fun onFilePicked(file: File) {
+                    binding.tvSubtitlePath.text = file.absolutePath
+                    SpUtil.put(Constants.K_DEFAULT_PATH_4_FIND_SUBTITLE, file.absolutePath)
+                }
+            })
+            val picker = FilePicker(activity)
+            picker.setExplorerConfig(config)
+            picker.okView.text = "就用这个目录"
+            picker.show()
         }
     }
 

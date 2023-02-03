@@ -3,12 +3,10 @@ package com.lxr.video_player.ui
 import android.content.Intent
 import android.content.IntentFilter
 import android.content.res.Configuration
-import android.os.Environment
 import android.util.DisplayMetrics
 import android.view.View
 import androidx.core.view.isVisible
 import com.blankj.utilcode.util.GsonUtils
-import com.blankj.utilcode.util.ToastUtils
 import com.blankj.utilcode.util.VibrateUtils
 import com.dyne.myktdemo.base.BaseActivity
 import com.github.gzuliyujiang.filepicker.ExplorerConfig
@@ -24,6 +22,7 @@ import com.lxr.video_player.constants.MessageEvent
 import com.lxr.video_player.databinding.ActivityPlayerBinding
 import com.lxr.video_player.entity.VideoInfo
 import com.lxr.video_player.receiver.BatteryReceiver
+import com.lxr.video_player.utils.SpUtil
 import com.shuyu.gsyvideoplayer.GSYVideoManager
 import com.shuyu.gsyvideoplayer.utils.OrientationUtils
 import me.jessyan.autosize.internal.CancelAdapt
@@ -115,7 +114,7 @@ open class PlayerActivity : BaseActivity<ActivityPlayerBinding>(), CancelAdapt {
                     override fun onSelect(position: Int, text: String?) {
                         if (position==0){
                             val config = ExplorerConfig(this@PlayerActivity)
-                            config.rootDir = File("sdcard")
+                            config.rootDir = File(SpUtil.getString(Constants.K_DEFAULT_PATH_4_FIND_SUBTITLE)!!)
                             config.isLoadAsync = true
                             config.explorerMode = ExplorerMode.FILE
                             config.allowExtensions = Constants.SUPPORT_SUBTITLE_TYPE
