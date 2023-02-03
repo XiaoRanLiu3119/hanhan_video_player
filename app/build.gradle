@@ -121,4 +121,8 @@ dependencies {
     implementation 'com.github.CarGuo.GSYVideoPlayer:gsyVideoPlayer-armv7a:v8.3.4-release-jitpack'
     //lottie动画
     implementation 'com.airbnb.android:lottie:5.2.0'
+    //选择器
+    implementation 'com.github.gzu-liyujiang.AndroidPicker:Common:4.1.11'
+    //文件选择器
+    implementation 'com.github.gzu-liyujiang.AndroidPicker:FilePicker:4.1.11'
 }

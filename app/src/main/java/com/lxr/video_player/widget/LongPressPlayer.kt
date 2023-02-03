@@ -1,21 +1,34 @@
 package com.lxr.video_player.widget
 
+import android.app.Activity
 import android.content.Context
+import android.graphics.Color
+import android.media.AudioManager
+import android.os.Environment
 import android.text.TextUtils
 import android.util.AttributeSet
-import android.view.GestureDetector
+import android.util.TypedValue
+import android.view.*
 import android.view.GestureDetector.SimpleOnGestureListener
-import android.view.MotionEvent
-import android.view.View
 import android.widget.ImageView
+import com.blankj.utilcode.util.LogUtils
 import com.blankj.utilcode.util.SPUtils
 import com.blankj.utilcode.util.ToastUtils
+import com.google.android.exoplayer2.Player
+import com.google.android.exoplayer2.text.CueGroup
+import com.google.android.exoplayer2.ui.CaptionStyleCompat
+import com.google.android.exoplayer2.ui.SubtitleView
 import com.lxr.video_player.R
 import com.lxr.video_player.action.OnLongPressUpListener
 import com.lxr.video_player.entity.VideoInfo
 import com.lxr.video_player.utils.SpUtil
+import com.lxr.video_player.widget.subtitle.GSYExoSubTitlePlayerManager
+import com.lxr.video_player.widget.subtitle.GSYExoSubTitleVideoManager
 import com.shuyu.gsyvideoplayer.listener.GSYStateUiListener
+import com.shuyu.gsyvideoplayer.utils.Debuger
 import com.shuyu.gsyvideoplayer.video.StandardGSYVideoPlayer
+import com.shuyu.gsyvideoplayer.video.base.GSYBaseVideoPlayer
+import com.shuyu.gsyvideoplayer.video.base.GSYVideoPlayer
 import com.shuyu.gsyvideoplayer.video.base.GSYVideoView
 
 /**
@@ -24,7 +37,11 @@ import com.shuyu.gsyvideoplayer.video.base.GSYVideoView
  * @Date : on 2023/1/12 14:31.
  * @Description : 自定义播放器,添加:倍速播放,下一集,缓存进度和一些丢失时长信息的视频
  */
-class LongPressPlayer : StandardGSYVideoPlayer {
+class LongPressPlayer : StandardGSYVideoPlayer, Player.Listener {
+
+    lateinit var mSubtitleView: SubtitleView
+    private var mSubTitle: String? = ""
+
     /**
      * 长按倍速标识,仅长按时开启,长按结束的MotionEvent.ACTION_UP时再关闭,避免点击时也触发倍速播放
      */
@@ -40,6 +57,7 @@ class LongPressPlayer : StandardGSYVideoPlayer {
     constructor(context: Context?, attrs: AttributeSet?) : super(context, attrs)
 
     private lateinit var batteryView: MyBatteryView
+    private lateinit var ivAddSubtitle: ImageView
 
     private var uriList: List<VideoInfo> = ArrayList()
 
@@ -49,11 +67,23 @@ class LongPressPlayer : StandardGSYVideoPlayer {
 
     override fun init(context: Context?) {
         super.init(context)
-
+        mSubtitleView = findViewById(R.id.sub_title_view)
+        mSubtitleView.setStyle(
+            CaptionStyleCompat(
+                Color.RED,
+                Color.TRANSPARENT,
+                Color.TRANSPARENT,
+                CaptionStyleCompat.EDGE_TYPE_NONE,
+                CaptionStyleCompat.EDGE_TYPE_NONE,
+                null
+            )
+        )
+        mSubtitleView.setFixedTextSize(TypedValue.COMPLEX_UNIT_DIP, 14f)
         batteryView = findViewById(R.id.battery)
         findViewById<ImageView>(R.id.iv_next).setOnClickListener {
             playNext()
         }
+        ivAddSubtitle = findViewById(R.id.iv_subtitle)
 
         post {
             gestureDetector = GestureDetector(
@@ -78,6 +108,13 @@ class LongPressPlayer : StandardGSYVideoPlayer {
                 }
             )
         }
+    }
+
+    /**
+     * 获取添加字幕view
+     */
+    fun getAddSubtitleView(): ImageView {
+        return ivAddSubtitle
     }
 
     /**
@@ -176,5 +213,99 @@ class LongPressPlayer : StandardGSYVideoPlayer {
 
     fun updateBattery(battery: Int) {
         batteryView.updateBattery(battery)
+    }
+
+    override fun startPrepare() {
+         gsyVideoManager?.listener()?.onCompletion()
+        if (mVideoAllCallBack != null) {
+            Debuger.printfLog("onStartPrepared")
+            mVideoAllCallBack.onStartPrepared(mOriginUrl, mTitle, this)
+        }
+        gsyVideoManager?.setListener(this)
+        gsyVideoManager?.setPlayTag(mPlayTag)
+        gsyVideoManager?.setPlayPosition(mPlayPosition)
+        mAudioManager.requestAudioFocus(
+            onAudioFocusChangeListener,
+            AudioManager.STREAM_MUSIC,
+            AudioManager.AUDIOFOCUS_GAIN_TRANSIENT
+        )
+        try {
+            if (mContext is Activity) {
+                (mContext as Activity).window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
+            }
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
+        mBackUpPlayingBufferState = -1
+        gsyVideoManager?.prepare(
+            mUrl,
+            mSubTitle,
+            this,
+            if (mMapHeadData == null) HashMap() else mMapHeadData,
+            mLooping,
+            mSpeed,
+            mCache,
+            mCachePath,
+            mOverrideExtension
+        )
+        setStateAndUi(CURRENT_STATE_PREPAREING)
+    }
+
+
+    override fun onCues(cueGroup: CueGroup) {
+        mSubtitleView.setCues(cueGroup.cues)
+    }
+
+    fun setSubTitle(subTitle: String?) {
+        mSubTitle = subTitle
+        // 不知道有什么方法播放中加载字幕,所以设置后重新播放(需要加载字幕的大多数是在刚开始观看的时候,直接重播应该不影响使用体验,或者加载后记录播放进度,直接seekTo)
+        startPlayLogic()
+    }
+
+    /**********以下重载 GSYVideoPlayer 的 全屏 SubtitleView 相关实现 */
+    override fun startWindowFullscreen(
+        context: Context?,
+        actionBar: Boolean,
+        statusBar: Boolean
+    ): GSYBaseVideoPlayer? {
+        val gsyBaseVideoPlayer = super.startWindowFullscreen(context, actionBar, statusBar)
+        val gsyExoSubTitleVideoView: LongPressPlayer =
+            gsyBaseVideoPlayer as LongPressPlayer
+        (GSYExoSubTitleVideoManager.instance().player as GSYExoSubTitlePlayerManager)
+            .addTextOutputPlaying(gsyExoSubTitleVideoView)
+        return gsyBaseVideoPlayer
+    }
+
+    override fun resolveNormalVideoShow(
+        oldF: View?,
+        vp: ViewGroup?,
+        gsyVideoPlayer: GSYVideoPlayer?
+    ) {
+        super.resolveNormalVideoShow(oldF, vp, gsyVideoPlayer)
+        val gsyExoSubTitleVideoView: LongPressPlayer? =
+            gsyVideoPlayer as LongPressPlayer?
+        (GSYExoSubTitleVideoManager.instance().player as GSYExoSubTitlePlayerManager)
+            .removeTextOutput(gsyExoSubTitleVideoView)
+    }
+
+    override fun getGSYVideoManager(): GSYExoSubTitleVideoManager? {
+        GSYExoSubTitleVideoManager.instance().initContext(context.applicationContext)
+        return GSYExoSubTitleVideoManager.instance()
+    }
+
+    override fun backFromFull(context: Context?): Boolean {
+        return GSYExoSubTitleVideoManager.backFromWindowFull(context)
+    }
+
+    override fun releaseVideos() {
+        GSYExoSubTitleVideoManager.releaseAllVideos()
+    }
+
+    override fun getFullId(): Int {
+        return GSYExoSubTitleVideoManager.FULLSCREEN_ID
+    }
+
+    override fun getSmallId(): Int {
+        return GSYExoSubTitleVideoManager.SMALL_ID
     }
 }

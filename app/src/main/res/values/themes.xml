@@ -8,9 +8,8 @@
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <!--CheckBox,RadioButton,SwitchCompat等一般控件的选中效果默认采用该颜色-->
         <item name="colorAccent">@color/colorAccent</item>
-        <item name="android:textColorPrimary">@color/common_white</item>
+<!--        <item name="android:textColorPrimary">@color/common_white</item>-->
         <item name="android:textColorHint">@color/textHint</item>
-        <item name="android:textColor">@color/common_white</item>
         <!--避免某些情况activity跳转/回跳会白屏-->
         <item name="android:windowBackground">@android:color/transparent</item>
     </style>

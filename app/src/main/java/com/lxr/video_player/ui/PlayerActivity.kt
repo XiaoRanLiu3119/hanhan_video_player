@@ -3,13 +3,21 @@ package com.lxr.video_player.ui
 import android.content.Intent
 import android.content.IntentFilter
 import android.content.res.Configuration
+import android.os.Environment
 import android.util.DisplayMetrics
 import android.view.View
 import androidx.core.view.isVisible
 import com.blankj.utilcode.util.GsonUtils
+import com.blankj.utilcode.util.ToastUtils
 import com.blankj.utilcode.util.VibrateUtils
 import com.dyne.myktdemo.base.BaseActivity
+import com.github.gzuliyujiang.filepicker.ExplorerConfig
+import com.github.gzuliyujiang.filepicker.FilePicker
+import com.github.gzuliyujiang.filepicker.annotation.ExplorerMode
+import com.github.gzuliyujiang.filepicker.contract.OnFilePickedListener
 import com.google.common.reflect.TypeToken
+import com.lxj.xpopup.XPopup
+import com.lxj.xpopup.interfaces.OnSelectListener
 import com.lxr.video_player.action.OnLongPressUpListener
 import com.lxr.video_player.constants.Constants
 import com.lxr.video_player.constants.MessageEvent
@@ -19,6 +27,7 @@ import com.lxr.video_player.receiver.BatteryReceiver
 import com.shuyu.gsyvideoplayer.GSYVideoManager
 import com.shuyu.gsyvideoplayer.utils.OrientationUtils
 import me.jessyan.autosize.internal.CancelAdapt
+import java.io.File
 
 
 open class PlayerActivity : BaseActivity<ActivityPlayerBinding>(), CancelAdapt {
@@ -99,6 +108,30 @@ open class PlayerActivity : BaseActivity<ActivityPlayerBinding>(), CancelAdapt {
                 }
             }
         })
+        binding.videoPlayer.getAddSubtitleView().setOnClickListener {
+            binding.videoPlayer.onVideoPause()
+            XPopup.Builder(this)
+                .asCenterList(null, arrayOf("添加本地字幕","隐藏本地字幕"),object :OnSelectListener{
+                    override fun onSelect(position: Int, text: String?) {
+                        if (position==0){
+                            val config = ExplorerConfig(this@PlayerActivity)
+                            config.rootDir = File("sdcard")
+                            config.isLoadAsync = true
+                            config.explorerMode = ExplorerMode.FILE
+                            config.allowExtensions = Constants.SUPPORT_SUBTITLE_TYPE
+                            config.onFilePickedListener =
+                                OnFilePickedListener {
+                                    binding.videoPlayer.setSubTitle(it.absolutePath)
+                                }
+                            val picker = FilePicker(this@PlayerActivity)
+                            picker.setExplorerConfig(config)
+                            picker.show()
+                        }else{
+                            binding.videoPlayer.setSubTitle("")
+                        }
+                    }
+                }).show()
+        }
 
         binding.videoPlayer.startPlayLogic()
     }

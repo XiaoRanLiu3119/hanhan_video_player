@@ -14,6 +14,12 @@
 
     </FrameLayout>
 
+    <com.google.android.exoplayer2.ui.SubtitleView
+        android:id="@+id/sub_title_view"
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="30dp" />
 
     <RelativeLayout
         android:id="@+id/thumb"
@@ -31,59 +37,83 @@
     <LinearLayout
         android:id="@+id/layout_bottom"
         android:layout_width="match_parent"
-        android:layout_height="40dp"
+        android:layout_height="70dp"
         android:layout_alignParentBottom="true"
         android:background="#99000000"
         android:gravity="center_vertical"
-        android:orientation="horizontal"
-        android:visibility="invisible">
+        android:orientation="vertical"
+        android:visibility="invisible"
+        tools:visibility="visible">
 
-        <TextView
-            android:id="@+id/current"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="16dp"
-            android:text="00:00"
-            android:textColor="#ffffff" />
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
 
-        <SeekBar
-            android:id="@+id/progress"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical"
-            android:layout_weight="1.0"
-            android:background="@null"
-            android:max="100"
-            android:maxHeight="4dp"
-            android:minHeight="4dp"
-            android:paddingTop="8dp"
-            android:paddingBottom="8dp"
-            android:progressDrawable="@drawable/video_seek_progress"
-            android:thumb="@drawable/video_seek_thumb" />
+            tools:visibility="visible">
+            <TextView
+                android:id="@+id/current"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="16dp"
+                android:text="00:00"
+                android:textColor="#ffffff" />
 
-        <TextView
-            android:id="@+id/total"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginRight="16dp"
-            android:text="00:00"
-            android:textColor="#ffffff" />
+            <SeekBar
+                android:id="@+id/progress"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:layout_weight="1.0"
+                android:background="@null"
+                android:max="100"
+                android:maxHeight="4dp"
+                android:minHeight="4dp"
+                android:paddingTop="8dp"
+                android:paddingBottom="8dp"
+                android:progressDrawable="@drawable/video_seek_progress"
+                android:thumb="@drawable/video_seek_thumb" />
 
-        <androidx.appcompat.widget.AppCompatImageView
-            android:id="@+id/iv_next"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            app:tint="@color/common_white"
-            android:layout_marginEnd="16dp"
-            android:src="@drawable/ic_round_skip_next_24"/>
+            <TextView
+                android:id="@+id/total"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="16dp"
+                android:text="00:00"
+                android:textColor="#ffffff" />
+            <androidx.appcompat.widget.AppCompatImageView
+                android:id="@+id/iv_next"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:tint="@color/common_white"
+                android:layout_marginEnd="16dp"
+                android:src="@drawable/ic_round_skip_next_24"/>
+            <ImageView
+                android:id="@+id/fullscreen"
+                android:layout_width="wrap_content"
+                android:layout_height="fill_parent"
+                android:paddingRight="16dp"
+                android:scaleType="center"
+                android:src="@drawable/video_enlarge" />
+        </LinearLayout>
 
-        <ImageView
-            android:id="@+id/fullscreen"
-            android:layout_width="wrap_content"
-            android:layout_height="fill_parent"
-            android:paddingRight="16dp"
-            android:scaleType="center"
-            android:src="@drawable/video_enlarge" />
+        <LinearLayout
+            android:id="@+id/layout_player_setting"
+            android:layout_height="30dp"
+            android:layout_width="match_parent"
+            android:orientation="horizontal"
+            android:paddingHorizontal="16dp"
+            android:gravity="end|center_vertical">
+            <androidx.appcompat.widget.AppCompatImageView
+                android:id="@+id/iv_subtitle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:tint="@color/common_white"
+                android:layout_marginEnd="16dp"
+                android:src="@drawable/ic_subtitles_24"/>
+        </LinearLayout>
+
     </LinearLayout>
 
     <ProgressBar
@@ -170,6 +200,7 @@
         <DigitalClock
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:textColor="@color/common_white"
             android:layout_marginEnd="10dp"/>
 
         <com.lxr.video_player.widget.MyBatteryView
