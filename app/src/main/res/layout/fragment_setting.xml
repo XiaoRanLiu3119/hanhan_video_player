@@ -16,7 +16,7 @@
         app:leftIcon="@null"
         app:lineVisible="false"
         app:title="设置"
-        app:titleColor="@color/common_white" />
+        app:titleColor="@color/white" />
 
     <ScrollView
         android:layout_width="match_parent"
@@ -42,7 +42,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="播放器"
-                    android:textColor="@color/common_white"
+                    android:textColor="@color/white"
                     android:textSize="14sp" />
 
                 <TextView
@@ -51,7 +51,7 @@
                     android:layout_height="wrap_content"
                     android:layout_alignParentRight="true"
                     android:text="@string/player_manager_ijk"
-                    android:textColor="@color/common_white"
+                    android:textColor="@color/white"
                     android:textSize="14sp" />
             </RelativeLayout>
 
@@ -68,14 +68,14 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="字幕文件路径"
-                    android:textColor="@color/common_white"
+                    android:textColor="@color/white"
                     android:textSize="14sp" />
                 <TextView
                     android:id="@+id/tv_subtitle_path"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignParentRight="true"
-                    android:textColor="@color/common_white"
+                    android:textColor="@color/white"
                     tools:text="/根目录"
                     android:textSize="14sp" />
             </RelativeLayout>
@@ -93,7 +93,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="清理缓存"
-                    android:textColor="@color/common_white"
+                    android:textColor="@color/white"
                     android:textSize="14sp" />
 
             </RelativeLayout>

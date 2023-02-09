@@ -4,7 +4,6 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/bg_page"
     android:orientation="vertical">
 
     <com.hjq.bar.TitleBar
@@ -15,7 +14,7 @@
         app:leftIcon="@null"
         app:lineVisible="false"
         app:title="本地视频"
-        app:titleColor="@color/common_white" />
+        app:titleColor="@color/white" />
 
     <LinearLayout
         android:id="@+id/ll_play_history_container"

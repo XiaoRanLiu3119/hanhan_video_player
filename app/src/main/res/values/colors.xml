@@ -1,30 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <!--应用的主要色调,actionBar默认使用该颜色,Toolbar导航栏的底色-->
     <color name="colorPrimary">#292635</color>
-    <color name="colorPrimaryDark">#202223</color>
+    <!--CheckBox,RadioButton,SwitchCompat等一般控件的选中效果默认采用该颜色-->
     <color name="colorAccent">#ef9608</color>
+<!--    默认window窗口(activity)背景颜色-->
+    <color name="windowBackground">#000</color>
 
 <!--    通用颜色-->
-    <color name="common_white">#FFFFFF</color>
-    <color name="common_black">#000000</color>
-    <color name="common_light_gray_color">#e6e6e6</color>
+    <color name="white">#FFFFFF</color>
+    <color name="black">#000000</color>
+    <color name="light_gray_color">#e6e6e6</color>
+    <!--    警示黄色-->
+    <color name="warn">#ffcb6b</color>
 
 <!--    制定颜色-->
     <!--    页面背景色,activity.fragment等-->
     <color name="bg_page">#000000</color>
-    <!--    列表背景色,标题栏导航栏,列表等-->
-    <color name="bg_list">#292635</color>
-    <!--    文字主要颜色-->
-    <color name="textPrimary">#333333</color>
-    <!--    文字主要颜色更轻版,列表条目的标题等-->
-    <color name="textColorPrimaryLighter">#666666</color>
-    <!--    提示文本,edittext等-->
-    <color name="textHint">#999999</color>
-    <!--    警示黄色-->
-    <color name="warn">#ffcb6b</color>
-
-    <color name="primaryGradientStart">#383838</color>
-    <color name="primaryGradientEnd">#202223</color>
 
 
 </resources>

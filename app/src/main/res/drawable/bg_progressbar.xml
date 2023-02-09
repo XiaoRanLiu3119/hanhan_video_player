@@ -12,7 +12,7 @@
             <!--  设置进度条颜  -->
             <shape>
 <!--                <corners android:radius="@dimen/common_corners" />-->
-                <solid android:color="@color/common_white"/>
+                <solid android:color="@color/white"/>
             </shape>
         </clip>
     </item>

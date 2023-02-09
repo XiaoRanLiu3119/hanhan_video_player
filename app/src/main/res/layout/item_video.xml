@@ -64,7 +64,7 @@
             android:ellipsize="end"
             android:maxLines="1"
             android:text='@{m.displayName}'
-            android:textColor="@color/common_white"
+            android:textColor="@color/white"
             android:textSize="16sp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@+id/iv_container"
@@ -77,7 +77,7 @@
             android:layout_height="wrap_content"
             android:layout_marginLeft="8dp"
             android:layout_marginBottom="6dp"
-            android:textColor="@color/common_white"
+            android:textColor="@color/white"
             android:textSize="12sp"
             app:layout_constraintBottom_toBottomOf="@+id/iv_container"
             app:layout_constraintStart_toStartOf="@+id/iv_container"
@@ -91,7 +91,7 @@
             android:text="@{ConvertUtils.byte2FitMemorySize(m.size)}"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="@+id/tv_name"
-            android:textColor="@color/common_white"
+            android:textColor="@color/white"
             android:textSize="12sp"
             tools:text="222M" />
 
@@ -102,7 +102,7 @@
             android:layout_marginStart="20dp"
             android:text="@{m.resolution}"
             tools:text="720x1080"
-            android:textColor="@color/common_white"
+            android:textColor="@color/white"
             android:textSize="12sp"
             app:layout_constraintLeft_toRightOf="@+id/textView"
             app:layout_constraintBottom_toBottomOf="@+id/textView"

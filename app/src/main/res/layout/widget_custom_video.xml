@@ -86,7 +86,7 @@
                 android:id="@+id/iv_next"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                app:tint="@color/common_white"
+                app:tint="@color/white"
                 android:layout_marginEnd="16dp"
                 android:src="@drawable/ic_round_skip_next_24"/>
             <ImageView
@@ -109,7 +109,7 @@
                 android:id="@+id/iv_subtitle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                app:tint="@color/common_white"
+                app:tint="@color/white"
                 android:layout_marginEnd="16dp"
                 android:src="@drawable/ic_subtitles_24"/>
         </LinearLayout>
@@ -200,7 +200,7 @@
         <DigitalClock
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textColor="@color/common_white"
+            android:textColor="@color/white"
             android:layout_marginEnd="10dp"/>
 
         <com.lxr.video_player.widget.MyBatteryView

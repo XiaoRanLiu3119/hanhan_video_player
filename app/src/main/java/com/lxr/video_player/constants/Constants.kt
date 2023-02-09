@@ -19,7 +19,7 @@ object Constants {
      * 支持(筛选)的字幕类型
      */
     @JvmField
-    val SUPPORT_SUBTITLE_TYPE = arrayOf(".srt", ".ass")
+    val SUPPORT_SUBTITLE_TYPE = arrayOf(".srt", ".ass", ".ssa")
 
     /**
      * 查找字幕文件的默认路径key

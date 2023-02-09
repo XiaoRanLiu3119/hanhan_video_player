@@ -32,13 +32,13 @@
             android:scaleType="centerCrop"
             app:lottie_fileName="forward_speed.json"
             app:lottie_loop="true"
-            app:lottie_colorFilter="@color/common_white"
+            app:lottie_colorFilter="@color/white"
             app:lottie_repeatMode="restart"/>
         <TextView
             android:id="@+id/tv_speed"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textColor="@color/common_white"
+            android:textColor="@color/white"
             android:text="2.0"/>
     </LinearLayout>
 </RelativeLayout>

@@ -52,7 +52,7 @@
             android:ellipsize="end"
             android:maxLines="1"
             android:text='@{m.name}'
-            android:textColor="@color/common_white"
+            android:textColor="@color/white"
             android:textSize="16sp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@+id/iv_container"
@@ -68,7 +68,7 @@
             android:text='@{m.videoList.size() + " 视频"}'
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="@+id/tv_name"
-            android:textColor="@color/common_white"
+            android:textColor="@color/white"
             android:textSize="12sp"
             tools:text="10 视频" />
 
