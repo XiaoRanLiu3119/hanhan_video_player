@@ -2,17 +2,20 @@ package com.lxr.video_player.ui
 
 import android.content.Intent
 import android.os.Handler
+import android.view.View
 import android.widget.ProgressBar
 import android.widget.TextView
 import com.blankj.utilcode.util.*
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.drake.brv.annotaion.AnimationType
+import com.drake.brv.utils.bindingAdapter
 import com.drake.brv.utils.divider
 import com.drake.brv.utils.linear
 import com.drake.brv.utils.models
 import com.drake.brv.utils.setup
 import com.dyne.myktdemo.base.BaseActivity
+import com.hjq.bar.TitleBar
 import com.lxj.xpopup.XPopup
 import com.lxj.xpopup.interfaces.OnSelectListener
 import com.lxr.video_player.R
@@ -40,8 +43,8 @@ class LocalVideoListActivity : BaseActivity<ActivityVideoListBinding>() {
     override fun initView() {
         binding.titleBar.leftTitle = intent.getStringExtra("title")
         bucketDisplayName = intent.getStringExtra("bucketDisplayName")
-
         binding.rv.run {
+
             linear().divider(R.drawable.divider).setup {
                 setAnimation(AnimationType.SLIDE_BOTTOM)
                 addType<VideoInfo>(R.layout.item_video)
@@ -73,50 +76,118 @@ class LocalVideoListActivity : BaseActivity<ActivityVideoListBinding>() {
                         findView<TextView>(R.id.tv_duration).text = duration
                     }
                 }
-                onClick(R.id.item) {
-                    val intent = Intent(this@LocalVideoListActivity, PlayerActivity::class.java)
-                    intent.putExtra("videoList", GsonUtils.toJson(models))
-                    intent.putExtra("position", modelPosition)
-                    startActivity(intent)
+
+                // 监听编辑(切换)模式,当前页面的backPress方法也实现了关闭方法,也会触发
+                onToggle { position, toggleMode, end ->
+                    // 刷新列表,item的选择按钮根据开关显隐,所以要刷新
+                    val model = getModel<VideoInfo>(position)
+                    model.checkBoxVisibility = toggleMode
+                    //数据变化.通知ui变化
+                    model.notifyChange()
+
+                    if (end) {//列表遍历结束
+                        // 编辑菜单根据编辑模式的开关显隐
+                        binding.llMenu.visibility = if (toggleMode) View.VISIBLE else View.GONE
+                        // 如果取消编辑模式则取消全选,目前按返回键和和标题栏关闭多选时触发
+                        if (!toggleMode) checkedAll(false)
+                    }
                 }
+
+                onClick(R.id.item) {
+                    if (!toggleMode) {
+                        val intent = Intent(this@LocalVideoListActivity, PlayerActivity::class.java)
+                        intent.putExtra("videoList", GsonUtils.toJson(models))
+                        intent.putExtra("position", modelPosition)
+                        startActivity(intent)
+                    }else{//编辑模式,设置选择状态
+                        setChecked(layoutPosition, !getModel<VideoInfo>().checked)
+                    }
+                }
+
+                // 监听列表选中
+                onChecked { position, isChecked, isAllChecked ->//刷新当前选中条目状态
+                    val model = getModel<VideoInfo>(position)
+                    model.checked = isChecked
+                    model.notifyChange()
+                }
+
+                //长按
                 onLongClick(R.id.item) {
-                    XPopup.Builder(this@LocalVideoListActivity)
-                        .asCenterList(
-                            getModel<VideoInfo>().title,
-                            arrayOf("删除"),
-                            object : OnSelectListener {
-                                override fun onSelect(position: Int, text: String?) {
-                                    showLoading()
-                                    if (FileUtils.delete(getModel<VideoInfo>().path)) {
-                                        // 删除缓存的影片时长(部分系统获取不到时长的影片,已在播放的时候缓存)
-                                        SPUtils.getInstance()
-                                            .remove(getModel<VideoInfo>().id.toString())
-                                        // 删除缓存的播放进度
-                                        SpUtil.removeKey(id.toString())
-                                        // 文件增删需要通知系统扫描,否则删除文件后还能查出来
-                                        // 这个工具类直接传文件路径不知道为啥通知失败,手动获取一下
-                                        FileUtils.notifySystemToScan(
-                                            FileUtils.getDirName(
-                                                getModel<VideoInfo>().path
-                                            )
-                                        )
-                                        EventBus.getDefault().post(SimpleMessage.REFRESH)
-                                    } else {
-                                        dismissLoading()
-                                        ToastUtils.showShort("删除失败,请重试")
-                                    }
-                                }
-                            }
-                        ).show()
+                    if (!toggleMode) {//开启编辑模式
+                        toggle()
+                        //并选中当前条
+                        setChecked(layoutPosition, true)
+                    }
+
+//                    XPopup.Builder(this@LocalVideoListActivity)
+//                        .asCenterList(
+//                            getModel<VideoInfo>().title,
+//                            arrayOf("删除"),
+//                            object : OnSelectListener {
+//                                override fun onSelect(position: Int, text: String?) {
+//                                    showLoading()
+//                                    if (FileUtils.delete(getModel<VideoInfo>().path)) {
+//                                        // 删除缓存的影片时长(部分系统获取不到时长的影片,已在播放的时候缓存)
+//                                        SPUtils.getInstance()
+//                                            .remove(getModel<VideoInfo>().id.toString())
+//                                        // 删除缓存的播放进度
+//                                        SpUtil.removeKey(id.toString())
+//                                        // 文件增删需要通知系统扫描,否则删除文件后还能查出来
+//                                        // 这个工具类直接传文件路径不知道为啥通知失败,手动获取一下
+//                                        FileUtils.notifySystemToScan(
+//                                            FileUtils.getDirName(
+//                                                getModel<VideoInfo>().path
+//                                            )
+//                                        )
+//                                        EventBus.getDefault().post(SimpleMessage.REFRESH)
+//                                    } else {
+//                                        dismissLoading()
+//                                        ToastUtils.showShort("删除失败,请重试")
+//                                    }
+//                                }
+//                            }
+//                        ).show()
                 }
             }
         }
+
+        initEditMode()
     }
 
     override fun onResume() {
         super.onResume()
         updateListData()
     }
+
+    override fun onRightClick(titleBar: TitleBar?) {
+        binding.rv.bindingAdapter.toggle() // 点击事件触发切换事件
+    }
+
+    override fun onBackPressed() {
+        if (binding.rv.bindingAdapter.toggleMode){//当前是编辑选择模式则关闭
+            binding.rv.bindingAdapter.toggle(false)
+        }else{
+            super.onBackPressed()
+        }
+    }
+
+    /**
+     * 初始化编辑模式视图
+     */
+    private fun initEditMode() {
+        val adapter = binding.rv.bindingAdapter
+
+        // 全选
+        binding.tvAllChecked.setOnClickListener {
+            adapter.checkedAll()
+        }
+
+        // 取消选择
+        binding.tvCancelChecked.setOnClickListener {
+            adapter.checkedAll(false)
+        }
+    }
+
 
     /**
      * 更新电影列表,和文件夹列表一样全都遍历出来后再筛选出当前文件夹的媒体  todo 后续看看contentResolver 能否按指定文件夹把文件遍历出来

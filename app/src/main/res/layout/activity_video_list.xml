@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
@@ -22,6 +22,7 @@
         app:rightIconTint="@color/light_gray_color"/>
 
     <com.lihang.ShadowLayout
+        android:layout_below="@+id/title_bar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="14dp"
@@ -36,5 +37,39 @@
             tools:listitem="@layout/item_video"/>
     </com.lihang.ShadowLayout>
 
+    <LinearLayout
+        android:id="@+id/ll_menu"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom"
+        android:background="@color/white"
+        android:elevation="8dp"
+        android:orientation="horizontal"
+        android:visibility="gone"
+        android:layout_alignParentBottom="true"
+        tools:visibility="visible">
 
-</LinearLayout>
+
+        <TextView
+            android:id="@+id/tvAllChecked"
+            android:layout_width="0dp"
+            android:layout_height="48dp"
+            android:layout_weight="1"
+            android:textColor="@color/colorPrimary"
+            android:foreground="?selectableItemBackgroundBorderless"
+            android:gravity="center"
+            android:text="全选" />
+
+        <TextView
+            android:id="@+id/tvCancelChecked"
+            android:layout_width="0dp"
+            android:layout_height="48dp"
+            android:foreground="?selectableItemBackgroundBorderless"
+            android:layout_weight="1"
+            android:textColor="@color/colorPrimary"
+            android:gravity="center"
+            android:text="取消全选" />
+
+    </LinearLayout>
+
+</RelativeLayout>

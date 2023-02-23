@@ -8,6 +8,7 @@
             name="m"
             type="com.lxr.video_player.entity.VideoInfo" />
         <import type="com.blankj.utilcode.util.ConvertUtils"/>
+        <import type="android.view.View"/>
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -49,6 +50,7 @@
                     android:progressDrawable="@drawable/bg_progressbar"
                     android:layout_alignParentBottom="true"
                     android:layout_height="2dp"/>
+
             </RelativeLayout>
         </com.lihang.ShadowLayout>
 
@@ -107,6 +109,18 @@
             app:layout_constraintLeft_toRightOf="@+id/textView"
             app:layout_constraintBottom_toBottomOf="@+id/textView"
             app:layout_constraintTop_toTopOf="@+id/textView" />
+
+        <CheckBox
+            android:id="@+id/cb"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center|right"
+            android:checked="@={m.checked}"
+            android:clickable="false"
+            app:layout_constraintRight_toRightOf="@id/item"
+            app:layout_constraintTop_toTopOf="@id/item"
+            app:layout_constraintBottom_toBottomOf="@id/item"
+            android:visibility="@{m.checkBoxVisibility ? View.VISIBLE : View.GONE}" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

@@ -1,6 +1,7 @@
 package com.lxr.video_player.entity
 
 import android.graphics.Bitmap
+import androidx.databinding.BaseObservable
 
 /**
  * @Author      : Liu XiaoRan
@@ -9,6 +10,9 @@ import android.graphics.Bitmap
  * @Description : 视频信息
  */
 data class VideoInfo(
+     var checked: Boolean = false,
+     var checkBoxVisibility: Boolean = false,//选择框的可见性,跟随列表的编辑模式开关
+
      var id :Int = 0,//视频id
      var path: String? = null,//文件路径
      var size: Long = 0,//大小
@@ -22,4 +26,4 @@ data class VideoInfo(
      var thumbnail: Bitmap? = null,//缩略图
      var bookmark: String? = null,//书签,上次播放的位置
 
-)
+) : BaseObservable() // BaseObservable 这是DataBinding的数据绑定写法,数据变化通知ui
