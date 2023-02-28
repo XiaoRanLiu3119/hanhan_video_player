@@ -49,7 +49,6 @@
         android:layout_alignParentBottom="true"
         tools:visibility="visible">
 
-
         <TextView
             android:id="@+id/tvAllChecked"
             android:layout_width="0dp"
@@ -59,7 +58,16 @@
             android:foreground="?selectableItemBackgroundBorderless"
             android:gravity="center"
             android:text="全选" />
-
+        <TextView
+            android:id="@+id/tv_delete"
+            android:layout_width="0dp"
+            android:layout_height="48dp"
+            android:foreground="?selectableItemBackgroundBorderless"
+            android:layout_weight="1"
+            android:textColor="@color/disable_text"
+            android:gravity="center"
+            android:enabled="false"
+            android:text="删除" />
         <TextView
             android:id="@+id/tvCancelChecked"
             android:layout_width="0dp"

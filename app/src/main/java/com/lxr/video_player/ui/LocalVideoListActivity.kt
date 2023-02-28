@@ -17,6 +17,8 @@ import com.drake.brv.utils.setup
 import com.dyne.myktdemo.base.BaseActivity
 import com.hjq.bar.TitleBar
 import com.lxj.xpopup.XPopup
+import com.lxj.xpopup.interfaces.OnCancelListener
+import com.lxj.xpopup.interfaces.OnConfirmListener
 import com.lxj.xpopup.interfaces.OnSelectListener
 import com.lxr.video_player.R
 import com.lxr.video_player.constants.SimpleMessage
@@ -64,13 +66,15 @@ class LocalVideoListActivity : BaseActivity<ActivityVideoListBinding>() {
                         }
                     } else { // 正常视频
                         duration = CommonUtil.stringForTime(getModel<VideoInfo>().duration)
-                        findView<ProgressBar>(R.id.progressBar).max = getModel<VideoInfo>().duration.toInt()
+                        findView<ProgressBar>(R.id.progressBar).max =
+                            getModel<VideoInfo>().duration.toInt()
                     }
 
                     // 已播放进度时长
                     val progressPlayed = SpUtil.getLong(getModel<VideoInfo>().id.toString())
                     if (progressPlayed != -0L && duration.isNotEmpty()) { // 有进度且有时长都显示
-                        findView<TextView>(R.id.tv_duration).text = CommonUtil.stringForTime(progressPlayed!!) + "/" + duration
+                        findView<TextView>(R.id.tv_duration).text =
+                            CommonUtil.stringForTime(progressPlayed!!) + "/" + duration
                         findView<ProgressBar>(R.id.progressBar).progress = progressPlayed.toInt()
                     } else { // 没有进度(也包括没时长,此时是空串,不耽误)
                         findView<TextView>(R.id.tv_duration).text = duration
@@ -99,7 +103,7 @@ class LocalVideoListActivity : BaseActivity<ActivityVideoListBinding>() {
                         intent.putExtra("videoList", GsonUtils.toJson(models))
                         intent.putExtra("position", modelPosition)
                         startActivity(intent)
-                    }else{//编辑模式,设置选择状态
+                    } else {//编辑模式,设置选择状态
                         setChecked(layoutPosition, !getModel<VideoInfo>().checked)
                     }
                 }
@@ -109,6 +113,15 @@ class LocalVideoListActivity : BaseActivity<ActivityVideoListBinding>() {
                     val model = getModel<VideoInfo>(position)
                     model.checked = isChecked
                     model.notifyChange()
+
+                    // 编辑模式中的删除根据是否有选中条目是否启用
+                    if (bindingAdapter.checkedCount != 0) {
+                        binding.tvDelete.isEnabled = true
+                        binding.tvDelete.setTextColor(ColorUtils.getColor(R.color.red))
+                    } else {
+                        binding.tvDelete.isEnabled = false
+                        binding.tvDelete.setTextColor(ColorUtils.getColor(R.color.disable_text))
+                    }
                 }
 
                 //长按
@@ -118,35 +131,6 @@ class LocalVideoListActivity : BaseActivity<ActivityVideoListBinding>() {
                         //并选中当前条
                         setChecked(layoutPosition, true)
                     }
-
-//                    XPopup.Builder(this@LocalVideoListActivity)
-//                        .asCenterList(
-//                            getModel<VideoInfo>().title,
-//                            arrayOf("删除"),
-//                            object : OnSelectListener {
-//                                override fun onSelect(position: Int, text: String?) {
-//                                    showLoading()
-//                                    if (FileUtils.delete(getModel<VideoInfo>().path)) {
-//                                        // 删除缓存的影片时长(部分系统获取不到时长的影片,已在播放的时候缓存)
-//                                        SPUtils.getInstance()
-//                                            .remove(getModel<VideoInfo>().id.toString())
-//                                        // 删除缓存的播放进度
-//                                        SpUtil.removeKey(id.toString())
-//                                        // 文件增删需要通知系统扫描,否则删除文件后还能查出来
-//                                        // 这个工具类直接传文件路径不知道为啥通知失败,手动获取一下
-//                                        FileUtils.notifySystemToScan(
-//                                            FileUtils.getDirName(
-//                                                getModel<VideoInfo>().path
-//                                            )
-//                                        )
-//                                        EventBus.getDefault().post(SimpleMessage.REFRESH)
-//                                    } else {
-//                                        dismissLoading()
-//                                        ToastUtils.showShort("删除失败,请重试")
-//                                    }
-//                                }
-//                            }
-//                        ).show()
                 }
             }
         }
@@ -156,6 +140,9 @@ class LocalVideoListActivity : BaseActivity<ActivityVideoListBinding>() {
 
     override fun onResume() {
         super.onResume()
+        //因为在这更新了数据,所以如果resume时候是编辑模式,更新后数据新的item的checkBoxVisibility默认是false,也就是隐藏状态,会导致开启了编辑(目前仅多选)模式,但是条目的checkBox是隐藏的
+        //所以先关闭编辑模式再获取数据(下策,且不该在resume随意刷新数据)
+        binding.rv.bindingAdapter.toggle(false)
         updateListData()
     }
 
@@ -164,9 +151,9 @@ class LocalVideoListActivity : BaseActivity<ActivityVideoListBinding>() {
     }
 
     override fun onBackPressed() {
-        if (binding.rv.bindingAdapter.toggleMode){//当前是编辑选择模式则关闭
+        if (binding.rv.bindingAdapter.toggleMode) {//当前是编辑选择模式则关闭
             binding.rv.bindingAdapter.toggle(false)
-        }else{
+        } else {
             super.onBackPressed()
         }
     }
@@ -185,6 +172,45 @@ class LocalVideoListActivity : BaseActivity<ActivityVideoListBinding>() {
         // 取消选择
         binding.tvCancelChecked.setOnClickListener {
             adapter.checkedAll(false)
+        }
+
+        // 删除
+        binding.tvDelete.setOnClickListener {
+            XPopup.Builder(this)
+                .asConfirm(
+                    "已选择( ${adapter.checkedCount} / ${adapter.modelCount} )",
+                    "确定删除?", "点错了",
+                    "确定",
+                    object : OnConfirmListener {
+                        override fun onConfirm() {
+                            showLoading()
+                            adapter.getCheckedModels<VideoInfo>().forEach {
+                                if (FileUtils.delete(it.path)) {
+                                    // 删除缓存的影片时长(部分系统获取不到时长的影片,已在播放的时候缓存)
+                                    SPUtils.getInstance()
+                                        .remove(it.id.toString())
+                                    // 删除缓存的播放进度
+                                    SpUtil.removeKey(it.id.toString())
+                                    // 文件增删需要通知系统扫描,否则删除文件后还能查出来
+                                    // 这个工具类直接传文件路径不知道为啥通知失败,手动获取一下
+                                    FileUtils.notifySystemToScan(
+                                        FileUtils.getDirName(
+                                            it.path
+                                        )
+                                    )
+                                } else {
+                                    ToastUtils.showShort("部分文件删除失败")
+                                }
+                            }
+                            EventBus.getDefault().post(SimpleMessage.REFRESH)
+                            adapter.toggle(false)
+                        }
+                    }, object : OnCancelListener {
+                        override fun onCancel() {
+                            adapter.toggle(false)
+                        }
+                    }, false
+                ).show()
         }
     }
 

@@ -13,6 +13,9 @@
     <color name="light_gray_color">#e6e6e6</color>
     <!--    警示黄色-->
     <color name="warn">#ffcb6b</color>
+    <color name="red">#ff4444</color>
+
+    <color name="disable_text">#b3b3b3</color>
 
 <!--    制定颜色-->
     <!--    页面背景色,activity.fragment等-->
