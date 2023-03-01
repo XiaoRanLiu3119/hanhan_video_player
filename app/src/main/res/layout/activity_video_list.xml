@@ -15,7 +15,7 @@
         app:lineVisible="false"
         app:leftTitleColor="@color/white"
         app:titleColor="@color/white"
-        app:rightIcon="@mipmap/ic_multi_choice"
+        app:rightIcon="@drawable/ic_multi_choice"
         app:rightIconWidth="18dp"
         app:rightIconHeight="18dp"
         app:leftIconTint="@color/light_gray_color"

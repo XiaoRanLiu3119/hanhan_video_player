@@ -28,7 +28,6 @@ import com.shuyu.gsyvideoplayer.utils.OrientationUtils
 import me.jessyan.autosize.internal.CancelAdapt
 import java.io.File
 
-
 open class PlayerActivity : BaseActivity<ActivityPlayerBinding>(), CancelAdapt {
 
     var orientationUtils: OrientationUtils? = null
@@ -55,16 +54,14 @@ open class PlayerActivity : BaseActivity<ActivityPlayerBinding>(), CancelAdapt {
     private fun initFontScale() {
         val configuration: Configuration = resources.configuration
         configuration.fontScale = 1F
-        //0.85 小, 1 标准大小, 1.15 大，1.3 超大 ，1.45 特大
+        // 0.85 小, 1 标准大小, 1.15 大，1.3 超大 ，1.45 特大
         val metrics = DisplayMetrics()
         windowManager.defaultDisplay.getMetrics(metrics)
         metrics.scaledDensity = configuration.fontScale * metrics.density
         resources.updateConfiguration(configuration, metrics)
     }
 
-
     private fun init() {
-
         val videoListJson = intent.getStringExtra("videoList")
         val position = intent.getIntExtra("position", 0)
         val videoList = GsonUtils.fromJson<List<VideoInfo>>(
@@ -73,22 +70,22 @@ open class PlayerActivity : BaseActivity<ActivityPlayerBinding>(), CancelAdapt {
         )
 
         binding.videoPlayer.setUp(videoList, position)
-        //增加title
+        // 增加title
         binding.videoPlayer.titleTextView.visibility = View.VISIBLE
-        //设置返回键
+        // 设置返回键
         binding.videoPlayer.backButton.visibility = View.VISIBLE
-        //设置旋转
+        // 设置旋转
         orientationUtils = OrientationUtils(this, binding.videoPlayer)
-        //设置全屏按键功能,这是使用的是选择屏幕，而不是全屏
+        // 设置全屏按键功能,这是使用的是选择屏幕，而不是全屏
         binding.videoPlayer.fullscreenButton
             .setOnClickListener { // ------- ！！！如果不需要旋转屏幕，可以不调用！！！-------
                 // 不需要屏幕旋转，还需要设置 setNeedOrientationUtils(false)
                 orientationUtils!!.resolveByClick()
             }
-        //是否可以滑动调整
+        // 是否可以滑动调整
         binding.videoPlayer.setIsTouchWiget(true)
         binding.videoPlayer.seekRatio = 50F
-        //设置返回按键功能
+        // 设置返回按键功能
         binding.videoPlayer.backButton.setOnClickListener { onBackPressed() }
         binding.videoPlayer.isReleaseWhenLossAudio = false
 
@@ -110,26 +107,29 @@ open class PlayerActivity : BaseActivity<ActivityPlayerBinding>(), CancelAdapt {
         binding.videoPlayer.getAddSubtitleView().setOnClickListener {
             binding.videoPlayer.onVideoPause()
             XPopup.Builder(this)
-                .asCenterList(null, arrayOf("添加本地字幕","隐藏本地字幕"),object :OnSelectListener{
-                    override fun onSelect(position: Int, text: String?) {
-                        if (position==0){
-                            val config = ExplorerConfig(this@PlayerActivity)
-                            config.rootDir = File(SpUtil.getString(Constants.K_DEFAULT_PATH_4_FIND_SUBTITLE)!!)
-                            config.isLoadAsync = true
-                            config.explorerMode = ExplorerMode.FILE
-                            config.allowExtensions = Constants.SUPPORT_SUBTITLE_TYPE
-                            config.onFilePickedListener =
-                                OnFilePickedListener {
-                                    binding.videoPlayer.setSubTitle(it.absolutePath)
-                                }
-                            val picker = FilePicker(this@PlayerActivity)
-                            picker.setExplorerConfig(config)
-                            picker.show()
-                        }else{
-                            binding.videoPlayer.setSubTitle("")
+                .asCenterList(
+                    null, arrayOf("添加本地字幕", "隐藏本地字幕"),
+                    object : OnSelectListener {
+                        override fun onSelect(position: Int, text: String?) {
+                            if (position == 0) {
+                                val config = ExplorerConfig(this@PlayerActivity)
+                                config.rootDir = File(SpUtil.getString(Constants.K_DEFAULT_PATH_4_FIND_SUBTITLE)!!)
+                                config.isLoadAsync = true
+                                config.explorerMode = ExplorerMode.FILE
+                                config.allowExtensions = Constants.SUPPORT_SUBTITLE_TYPE
+                                config.onFilePickedListener =
+                                    OnFilePickedListener {
+                                        binding.videoPlayer.setSubTitle(it.absolutePath)
+                                    }
+                                val picker = FilePicker(this@PlayerActivity)
+                                picker.setExplorerConfig(config)
+                                picker.show()
+                            } else {
+                                binding.videoPlayer.setSubTitle("")
+                            }
                         }
                     }
-                }).show()
+                ).show()
         }
 
         binding.videoPlayer.startPlayLogic()
@@ -157,5 +157,4 @@ open class PlayerActivity : BaseActivity<ActivityPlayerBinding>(), CancelAdapt {
         binding.videoPlayer.setVideoAllCallBack(null)
         super.onBackPressed()
     }
-
 }

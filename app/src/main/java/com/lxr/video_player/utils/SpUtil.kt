@@ -5,9 +5,9 @@ import com.tencent.mmkv.MMKV
 import java.util.*
 
 /**
- * @Author      : Liu XiaoRan
- * @Email       : 592923276@qq.com
- * @Date        : on 2022/10/25 17:38.
+ * @Author : Liu XiaoRan
+ * @Email : 592923276@qq.com
+ * @Date : on 2022/10/25 17:38.
  * @Description :
  */
 object SpUtil {
@@ -31,14 +31,14 @@ object SpUtil {
     }
 
     fun <T : Parcelable> put(key: String, t: T?) {
-        if(t ==null){
+        if (t == null) {
             return
         }
         mmkv?.encode(key, t)
     }
 
     fun put(key: String, sets: Set<String>?) {
-        if(sets ==null){
+        if (sets == null) {
             return
         }
         mmkv?.encode(key, sets)

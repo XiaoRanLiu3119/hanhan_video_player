@@ -51,7 +51,7 @@ class MovieFoldersListFragment : BaseFragment<FragmentMovieFolderListBinding>() 
                 onBind {
                     Glide.with(context).load(getModel<VideoInfo>().path)
                         .diskCacheStrategy(DiskCacheStrategy.AUTOMATIC)
-                        .placeholder(R.mipmap.iv_video)
+                        .placeholder(R.drawable.iv_video)
                         .centerCrop().into(findView(R.id.iv))
                     // 总时长
                     var duration = ""
@@ -91,7 +91,7 @@ class MovieFoldersListFragment : BaseFragment<FragmentMovieFolderListBinding>() 
                     Glide.with(context)
                         .load(getModel<VideoFolder>().videoList[0].path) // 第一个视频做封面
                         .diskCacheStrategy(DiskCacheStrategy.AUTOMATIC)
-                        .placeholder(R.mipmap.iv_video)
+                        .placeholder(R.drawable.iv_video)
                         .centerCrop().into(findView(R.id.iv))
                 }
                 onClick(R.id.item) {

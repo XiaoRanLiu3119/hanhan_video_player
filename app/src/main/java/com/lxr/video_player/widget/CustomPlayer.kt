@@ -214,7 +214,7 @@ class CustomPlayer : StandardGSYVideoPlayer, Player.Listener {
     }
 
     override fun startPrepare() {
-         gsyVideoManager?.listener()?.onCompletion()
+        gsyVideoManager?.listener()?.onCompletion()
         if (mVideoAllCallBack != null) {
             Debuger.printfLog("onStartPrepared")
             mVideoAllCallBack.onStartPrepared(mOriginUrl, mTitle, this)
@@ -248,7 +248,6 @@ class CustomPlayer : StandardGSYVideoPlayer, Player.Listener {
         )
         setStateAndUi(CURRENT_STATE_PREPAREING)
     }
-
 
     override fun onCues(cueGroup: CueGroup) {
         mSubtitleView.setCues(cueGroup.cues)

@@ -36,7 +36,7 @@
                 android:id="@+id/iv"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:src="@mipmap/iv_video"/>
+                android:src="@drawable/iv_video"/>
 
         </com.lihang.ShadowLayout>
 

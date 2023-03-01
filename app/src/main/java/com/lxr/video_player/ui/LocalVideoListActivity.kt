@@ -19,7 +19,6 @@ import com.hjq.bar.TitleBar
 import com.lxj.xpopup.XPopup
 import com.lxj.xpopup.interfaces.OnCancelListener
 import com.lxj.xpopup.interfaces.OnConfirmListener
-import com.lxj.xpopup.interfaces.OnSelectListener
 import com.lxr.video_player.R
 import com.lxr.video_player.constants.SimpleMessage
 import com.lxr.video_player.databinding.ActivityVideoListBinding
@@ -46,14 +45,13 @@ class LocalVideoListActivity : BaseActivity<ActivityVideoListBinding>() {
         binding.titleBar.leftTitle = intent.getStringExtra("title")
         bucketDisplayName = intent.getStringExtra("bucketDisplayName")
         binding.rv.run {
-
             linear().divider(R.drawable.divider).setup {
                 setAnimation(AnimationType.SLIDE_BOTTOM)
                 addType<VideoInfo>(R.layout.item_video)
                 onBind {
                     Glide.with(context).load(getModel<VideoInfo>().path)
                         .diskCacheStrategy(DiskCacheStrategy.AUTOMATIC)
-                        .placeholder(R.mipmap.iv_video)
+                        .placeholder(R.drawable.iv_video)
                         .centerCrop().into(findView(R.id.iv))
                     // 总时长
                     var duration = ""
@@ -86,10 +84,10 @@ class LocalVideoListActivity : BaseActivity<ActivityVideoListBinding>() {
                     // 刷新列表,item的选择按钮根据开关显隐,所以要刷新
                     val model = getModel<VideoInfo>(position)
                     model.checkBoxVisibility = toggleMode
-                    //数据变化.通知ui变化
+                    // 数据变化.通知ui变化
                     model.notifyChange()
 
-                    if (end) {//列表遍历结束
+                    if (end) { // 列表遍历结束
                         // 编辑菜单根据编辑模式的开关显隐
                         binding.llMenu.visibility = if (toggleMode) View.VISIBLE else View.GONE
                         // 如果取消编辑模式则取消全选,目前按返回键和和标题栏关闭多选时触发
@@ -103,13 +101,13 @@ class LocalVideoListActivity : BaseActivity<ActivityVideoListBinding>() {
                         intent.putExtra("videoList", GsonUtils.toJson(models))
                         intent.putExtra("position", modelPosition)
                         startActivity(intent)
-                    } else {//编辑模式,设置选择状态
+                    } else { // 编辑模式,设置选择状态
                         setChecked(layoutPosition, !getModel<VideoInfo>().checked)
                     }
                 }
 
                 // 监听列表选中
-                onChecked { position, isChecked, isAllChecked ->//刷新当前选中条目状态
+                onChecked { position, isChecked, isAllChecked -> // 刷新当前选中条目状态
                     val model = getModel<VideoInfo>(position)
                     model.checked = isChecked
                     model.notifyChange()
@@ -124,11 +122,11 @@ class LocalVideoListActivity : BaseActivity<ActivityVideoListBinding>() {
                     }
                 }
 
-                //长按
+                // 长按
                 onLongClick(R.id.item) {
-                    if (!toggleMode) {//开启编辑模式
+                    if (!toggleMode) { // 开启编辑模式
                         toggle()
-                        //并选中当前条
+                        // 并选中当前条
                         setChecked(layoutPosition, true)
                     }
                 }
@@ -140,8 +138,8 @@ class LocalVideoListActivity : BaseActivity<ActivityVideoListBinding>() {
 
     override fun onResume() {
         super.onResume()
-        //因为在这更新了数据,所以如果resume时候是编辑模式,更新后数据新的item的checkBoxVisibility默认是false,也就是隐藏状态,会导致开启了编辑(目前仅多选)模式,但是条目的checkBox是隐藏的
-        //所以先关闭编辑模式再获取数据(下策,且不该在resume随意刷新数据)
+        // 因为在这更新了数据,所以如果resume时候是编辑模式,更新后数据新的item的checkBoxVisibility默认是false,也就是隐藏状态,会导致开启了编辑(目前仅多选)模式,但是条目的checkBox是隐藏的
+        // 所以先关闭编辑模式再获取数据(下策,且不该在resume随意刷新数据)
         binding.rv.bindingAdapter.toggle(false)
         updateListData()
     }
@@ -151,7 +149,7 @@ class LocalVideoListActivity : BaseActivity<ActivityVideoListBinding>() {
     }
 
     override fun onBackPressed() {
-        if (binding.rv.bindingAdapter.toggleMode) {//当前是编辑选择模式则关闭
+        if (binding.rv.bindingAdapter.toggleMode) { // 当前是编辑选择模式则关闭
             binding.rv.bindingAdapter.toggle(false)
         } else {
             super.onBackPressed()
@@ -179,7 +177,8 @@ class LocalVideoListActivity : BaseActivity<ActivityVideoListBinding>() {
             XPopup.Builder(this)
                 .asConfirm(
                     "已选择( ${adapter.checkedCount} / ${adapter.modelCount} )",
-                    "确定删除?", "点错了",
+                    "确定删除?",
+                    "点错了",
                     "确定",
                     object : OnConfirmListener {
                         override fun onConfirm() {
@@ -205,15 +204,16 @@ class LocalVideoListActivity : BaseActivity<ActivityVideoListBinding>() {
                             EventBus.getDefault().post(SimpleMessage.REFRESH)
                             adapter.toggle(false)
                         }
-                    }, object : OnCancelListener {
+                    },
+                    object : OnCancelListener {
                         override fun onCancel() {
                             adapter.toggle(false)
                         }
-                    }, false
+                    },
+                    false
                 ).show()
         }
     }
-
 
     /**
      * 更新电影列表,和文件夹列表一样全都遍历出来后再筛选出当前文件夹的媒体  todo 后续看看contentResolver 能否按指定文件夹把文件遍历出来

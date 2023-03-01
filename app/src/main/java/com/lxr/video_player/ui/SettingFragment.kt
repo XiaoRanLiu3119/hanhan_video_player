@@ -22,15 +22,14 @@ import tv.danmaku.ijk.media.exo2.Exo2PlayerManager
 import java.io.File
 
 /**
- * @Author      : Liu XiaoRan
- * @Email       : 592923276@qq.com
- * @Date        : on 2023/1/11 13:52.
+ * @Author : Liu XiaoRan
+ * @Email : 592923276@qq.com
+ * @Date : on 2023/1/11 13:52.
  * @Description :
  */
 class SettingFragment : BaseFragment<FragmentSettingBinding>() {
 
     override fun initView() {
-
         binding.tvSubtitlePath.text = SpUtil.getString(Constants.K_DEFAULT_PATH_4_FIND_SUBTITLE)
 
         binding.rlPlayerManager.setOnClickListener {
@@ -62,22 +61,26 @@ class SettingFragment : BaseFragment<FragmentSettingBinding>() {
 
         binding.rlClearCache.setOnClickListener {
             XPopup.Builder(this@SettingFragment.context)
-                .asConfirm("提示","确认清理缓存?",object :OnConfirmListener{
-                    override fun onConfirm() {
-                        SpUtil.clearAll()
-                        SPUtils.getInstance().clear()
-                        GSYVideoManager.instance().clearAllDefaultCache(this@SettingFragment.context)
-                        //通知视频列表等,清楚通过缓存获取的状态(播放记录及播放时间等)
-                        EventBus.getDefault().post(SimpleMessage.REFRESH)
+                .asConfirm(
+                    "提示",
+                    "确认清理缓存?",
+                    object : OnConfirmListener {
+                        override fun onConfirm() {
+                            SpUtil.clearAll()
+                            SPUtils.getInstance().clear()
+                            GSYVideoManager.instance().clearAllDefaultCache(this@SettingFragment.context)
+                            // 通知视频列表等,清楚通过缓存获取的状态(播放记录及播放时间等)
+                            EventBus.getDefault().post(SimpleMessage.REFRESH)
+                        }
                     }
-                }).show()
+                ).show()
         }
 
         binding.rlSubtitlePath.setOnClickListener {
             val config = ExplorerConfig(context)
             config.rootDir = File(SpUtil.getString(Constants.K_DEFAULT_PATH_4_FIND_SUBTITLE)!!)
             config.explorerMode = ExplorerMode.DIRECTORY
-            config.setOnFilePickedListener(object :OnFilePickedListener{
+            config.setOnFilePickedListener(object : OnFilePickedListener {
                 override fun onFilePicked(file: File) {
                     binding.tvSubtitlePath.text = file.absolutePath
                     SpUtil.put(Constants.K_DEFAULT_PATH_4_FIND_SUBTITLE, file.absolutePath)
@@ -89,5 +92,4 @@ class SettingFragment : BaseFragment<FragmentSettingBinding>() {
             picker.show()
         }
     }
-
 }
