@@ -11,6 +11,6 @@ class SplashActivity : BaseActivity<ActivitySplashBinding>() {
         Handler().postDelayed({
             startActivity(Intent(this@SplashActivity, MainActivity::class.java))
             finish()
-        },1200)
+        },500)
     }
 }
